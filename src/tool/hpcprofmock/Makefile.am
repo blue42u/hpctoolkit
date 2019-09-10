@@ -12,7 +12,7 @@
 ## HPCToolkit is at 'hpctoolkit.org' and in 'README.Acknowledgments'.
 ## --------------------------------------------------------------------------
 ##
-## Copyright ((c)) 2002-2020, Rice University
+## Copyright ((c)) 2002-2019, Rice University
 ## All rights reserved.
 ##
 ## Redistribution and use in source and binary forms, with or without
@@ -60,43 +60,85 @@
 # We do not want the standard GNU files (NEWS README AUTHORS ChangeLog...)
 AUTOMAKE_OPTIONS = foreign
 
+#############################################################################
+# Common settings
+#############################################################################
+
+include $(top_srcdir)/src/Makeinclude.config
+
+
+#############################################################################
+# Local settings
+#############################################################################
+
+XED2_LIB_FLAGS = @XED2_LIB_FLAGS@
+
+MYSOURCES = \
+	main.cpp
+
+MYCFLAGS   = @HOST_CFLAGS@   $(HPC_IFLAGS) @BINUTILS_IFLAGS@
+MYCXXFLAGS = @HOST_CXXFLAGS@ $(HPC_IFLAGS) @BINUTILS_IFLAGS@ @XERCES_IFLAGS@
+
+MYLDFLAGS = \
+	@HOST_CXXFLAGS@ \
+	@XERCES_LDFLAGS@ \
+	@LZMA_LDFLAGS_DYN@
+
+MYLDADD = \
+	@HOST_LIBTREPOSITORY@ \
+	$(HPCLIB_Analysis) \
+	$(HPCLIB_Banal_Simple) \
+	$(HPCLIB_ProfXML) \
+	$(HPCLIB_Prof) \
+	$(HPCLIB_ProfLean) \
+	$(HPCLIB_Binutils) \
+	$(HPCLIB_ISA) \
+	$(MY_LIB_XED) \
+	$(HPCLIB_XML) \
+	$(HPCLIB_Support) \
+	$(HPCLIB_SupportLean) \
+	@LZMA_LDFLAGS_STAT@ \
+	@XERCES_LDLIBS@ \
+	@BINUTILS_LIBS@ \
+	@TBB_LFLAGS@ \
+	@HOST_HPCPROF_LDFLAGS@
+
+if OPT_ENABLE_OPENMP
+MYCXXFLAGS += $(OPENMP_FLAG)
+endif
+
+if HOST_CPU_X86_FAMILY
+MY_LIB_XED = $(XED2_LIB_FLAGS)
+else
+MY_LIB_XED =
+endif
+
+MYCLEAN = @HOST_LIBTREPOSITORY@
 
 #############################################################################
 # Automake rules
 #############################################################################
 
-SUBDIRS =
+pkglibdir = @my_pkglibdir@
+pkglibexecdir = @my_pkglibexecdir@
 
-if OPT_BUILD_TOOL_ALL
-SUBDIRS += \
-	hpcstruct \
-	hpcprof \
-	hpcproftt \
-	hpclump \
-	hpctracedump \
-	hpcprofmock
+pkglibexec_PROGRAMS = hpcprofmock-bin
 
-if OPT_ENABLE_HPCSERVER
-SUBDIRS += hpcserver
-endif
-endif
+hpcprofmock_bin_SOURCES  = $(MYSOURCES)
+hpcprofmock_bin_CFLAGS   = $(MYCFLAGS)
+hpcprofmock_bin_CXXFLAGS = $(MYCXXFLAGS)
+hpcprofmock_bin_LDFLAGS  = $(MYLDFLAGS)
+hpcprofmock_bin_LDADD    = $(MYLDADD)
 
-if OPT_ENABLE_HPCRUN
-  SUBDIRS += \
-	hpcrun \
-	hpcfnbounds \
-	hpcfnbounds2
-endif
+MOSTLYCLEANFILES = $(MYCLEAN)
 
-if OPT_ENABLE_MPI
-  SUBDIRS += hpcprof-mpi 
-
-if OPT_ENABLE_HPCSERVER
-  SUBDIRS += hpcserver/mpi
-endif
-endif
+install-exec-hook:
+	$(call HPC_moveIfStaticallyLinked,$(DESTDIR)$(pkglibexecdir)/hpcprofmock-bin$(EXEEXT),$(DESTDIR)$(bindir)/hpcprofmock$(EXEEXT))
 
 
 #############################################################################
-# Other rules
+# Common rules
 #############################################################################
+
+include $(top_srcdir)/src/Makeinclude.rules
+
