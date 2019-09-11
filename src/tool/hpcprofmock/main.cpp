@@ -78,7 +78,7 @@ public:
   child_map children;
 
   template<template<typename K, typename V> class X>
-  bool isSameAs(const Node<X>& o, int depth = 0) {
+  bool isSameAs(const Node<X>& o, int depth = 0) const {
     // Check that our childcounts are the same
     if(children.size() != o.children.size()) return false;
     // For each child, try to find a matching child on the other side
@@ -99,7 +99,7 @@ public:
     // Everything seems to have worked...
     return true;
   }
-  
+
   // Merge operation
   Node& operator+=(const Node& o) {
     for(const auto& oc: o.children) {
@@ -109,7 +109,7 @@ public:
     }
     return *this;
   }
-  
+
 private:
   void convert(const Prof::CCT::ANode& n, Node*& tmp) {
     using namespace Prof::CCT;
@@ -134,7 +134,7 @@ public:
   Node(const Prof::CCT::ADynNode& n) { convert(n); }
 
   enum class Order { pre, post, };
-  
+
   void foreach(std::function<void(const Node&)> f, Order o = Order::pre) const {
     if(o == Order::pre) f(*this);
     for(const auto& child: children) child.second->foreach(f, o);
@@ -143,11 +143,16 @@ public:
   void foreach(std::function<void(const Node&, const Node*)> f) const {
     foreach(f, nullptr);
   }
-  
+
   void convert(const Prof::CCT::ANode& n) {
     Node* tmp = nullptr;
     convert(n, tmp);
     if(tmp) delete tmp;
+  }
+
+  Node& operator+=(const Prof::CallPath::Profile* p) {
+    convert(*p->cct()->root());
+    return *this;
   }
 
   std::ostream& dump(std::ostream& os, int depth) {
@@ -229,6 +234,17 @@ struct stats {
   }
 };
 
+template<typename X, typename Y>
+static void sanity(const char* name, const X& ours, const Y& orig) {
+  stats<true> all;
+  stats<false> nozero;
+  ours.foreach([&](const X& n){ all += n; nozero += n; });
+  std::cerr << name << ":\n"
+    << "  Isomorphic to original: " << (ours.isSameAs(orig) ? "OK" : "FAIL") << "\n"
+    << "  Branching Factor: " << all << "\n"
+    << "  Branching Factor (>0): " << nozero << "\n";
+}
+
 void prof_abort(int ec) { exit(ec); }
 
 #pragma omp declare reduction(+:ParallelNode:omp_out += omp_in)
@@ -236,80 +252,88 @@ void prof_abort(int ec) { exit(ec); }
 
 int main(int argc, char* const* argv) {
   std::cerr << "WARNING: This is a mockup!\n";
-  
+
   Args args;
   args.parse(argc, argv);
   RealPathMgr::singleton().searchPaths(args.searchPathStr());
   auto nArgs = Analysis::Util::normalizeProfileArgs(args.profileFiles);
-  
+
   // Read in all the data
   std::vector<std::pair<std::string, Prof::CallPath::Profile*>> profs;
   for(auto&& fn: *nArgs.paths)
     profs.push_back({fn, Prof::CallPath::Profile::make(fn.c_str(), 0, NULL)});
-  
-  // Convert it all in parallel (because we can do that)
-  ParallelNode root;
+
+  // Attempt 1: Pour it all into one big pot.
+  ParallelNode root_direct;
   #pragma omp parallel for schedule(dynamic)
-  for(auto&& pp: profs) root.convert(*pp.second->cct()->root());
-  
-  // Convert it all in parallel, but this time in separate bins. Each thread
-  // has their own bin and an OpenMP reduction handles the rest.
-  SerialNode roott;
-  std::vector<const SerialNode*> rootts(omp_get_max_threads());
+  for(auto&& pp: profs) root_direct += pp.second;
+
+  // Attempt 2: Let OpenMP do a reduction with non-parallel versions.
+  SerialNode root_omp;
+  #pragma omp parallel for schedule(dynamic) reduction(+:root_omp)
+  for(auto&& pp: profs) root_omp += pp.second;
+
+  // Attempt 2b: OpenMP reduction but with TBB-based nodes.
+  ParallelNode root_omptbb;
+  #pragma omp parallel for schedule(dynamic) reduction(+:root_omptbb)
+  for(auto&& pp: profs) root_omptbb += pp.second;
+
+  // Attempt 3: Use a reduction tree to merge the profiles.
+  std::vector<SerialNode> roots_tree(omp_get_max_threads());
   #pragma omp parallel
   {
     int id = omp_get_thread_num();
     int num = omp_get_num_threads();
-    SerialNode myroot;
-    rootts[id] = &myroot;
+    SerialNode& myroot = roots_tree[id];
     #pragma omp for schedule(dynamic)
-    for(auto&& pp: profs) myroot.convert(*pp.second->cct()->root());
+    for(auto&& pp: profs) myroot += pp.second;
     for(int round = 0; (num >> round) != 0; round++) {
       #pragma omp barrier
       if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round
         int oid = (id & ~((1<<round)-1)) | (1<<round);
         if(oid < num) {  // Only if our partner exists
-          myroot += *rootts[oid];
+          myroot += roots_tree[oid];
         }
       }
     }
-    if(id == 0) roott = myroot;
   }
-  
-  // Third attempt, let's see if there's a difference between tbb::* and std::*
-  ParallelNode roottt;
-  #pragma omp parallel for schedule(dynamic) reduction(+:roottt)
-  for(auto&& pp: profs) roottt.convert(*pp.second->cct()->root());
-  
-  // Construct the original version (for sanity checking)
-  // (We have to do this after because Profile::merge does some weird things)
+  SerialNode& root_tree = roots_tree[0];
+
+  // Attempt 3b: Reduction tree but with TBB-based nodes.
+  std::vector<ParallelNode> roots_treetbb(omp_get_max_threads());
+  #pragma omp parallel
+  {
+    int id = omp_get_thread_num();
+    int num = omp_get_num_threads();
+    ParallelNode& myroot = roots_treetbb[id];
+    #pragma omp for schedule(dynamic)
+    for(auto&& pp: profs) myroot += pp.second;
+    for(int round = 0; (num >> round) != 0; round++) {
+      #pragma omp barrier
+      if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round
+        int oid = (id & ~((1<<round)-1)) | (1<<round);
+        if(oid < num) {  // Only if our partner exists
+          myroot += roots_treetbb[oid];
+        }
+      }
+    }
+  }
+  ParallelNode& root_treetbb = roots_treetbb[0];
+
+  // Now that we're done with the data, construct the original merged tree.
   Prof::CallPath::Profile* merged = profs[0].second;
   for(auto&& pp: profs) if(pp.second != merged)
     merged->merge(*pp.second,
       Prof::CallPath::Profile::Merge_MergeMetricByName,
       Prof::CCT::MrgFlg_NormalizeTraceFileY);
-  CompleteNode rootm(*merged->cct()->root());
+  CompleteNode root_orig(*merged->cct()->root());
 
-  // Sanity checks
-  std::cerr << "Direct conversion is " << (root.isSameAs(rootm) ? "" : "not ")
-    << "isomorphic to original.\n";
-  std::cerr << "Reduction is " << (roott.isSameAs(rootm) ? "" : "not ")
-    << "isomorphic to original.\n";
-  std::cerr << "TBB reduction is " << (roottt.isSameAs(rootm) ? "" : "not ")
-    << "isomorphic to original.\n";
-    
-  // Get an average branching factor across the tree.
-  stats<true> all;
-  stats<false> nozero;
-  root.foreach([&](const ParallelNode& n){ all += n; nozero += n; });
-  std::cerr << "Direct BF: " << all << "\n";
-  std::cerr << "Direct BF (> 0): " << nozero << "\n";
+  // Check all the sanities. Templated above because I'm lazy.
+  sanity("1. Direct Conversion", root_direct, root_orig);
+  sanity("2. OpenMP Reduction", root_omp, root_orig);
+  sanity("2b. OpenMP Reduction w/ TBB", root_omptbb, root_orig);
+  sanity("3. Tree Reduction", root_tree, root_orig);
+  sanity("3b. Tree Reduction w/ TBB", root_treetbb, root_orig);
 
-  stats<true> all2;
-  stats<false> nozero2;
-  roott.foreach([&](const SerialNode& n){ all2 += n; nozero2 += n; });
-  std::cerr << "Reduction BF: " << all2 << "\n";
-  std::cerr << "Reduction BF (> 0): " << nozero2 << "\n";
-  
   return 0;
 }
