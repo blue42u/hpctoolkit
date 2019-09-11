@@ -47,12 +47,12 @@ class std::hash<MergeKey> {
   std::hash<Prof::LoadMap::LMId_t> lmid;
   std::hash<std::uint32_t> u32;
   std::hash<std::uint64_t> u64;
+
+  static constexpr unsigned int bits = std::numeric_limits<std::size_t>::digits;
+  static constexpr unsigned int mask = bits - 1;
+  static_assert(0 == (bits & (bits - 1)), "value to rotate must be a power of 2");
   static constexpr std::size_t rotl(std::size_t n, unsigned int c) {
-    constexpr unsigned int bits = std::numeric_limits<std::size_t>::digits;
-    static_assert(0 == (bits & (bits - 1)), "value to rotate must be a power of 2");
-    constexpr unsigned int mask = bits - 1;
-    const unsigned int mc = mask & c;
-    return (n << mc) | (n >> (-mc)&mask);
+    return (n << (mask & c)) | (n >> (-(mask & c))&mask);
   }
 public:
   std::size_t operator()(const MergeKey& k) const {
