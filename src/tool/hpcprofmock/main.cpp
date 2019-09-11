@@ -266,17 +266,17 @@ int main(int argc, char* const* argv) {
   // Attempt 1: Pour it all into one big pot.
   ParallelNode root_direct;
   #pragma omp parallel for schedule(dynamic)
-  for(auto&& pp: profs) root_direct += pp.second;
+  for(std::size_t i = 0; i < profs.size(); i++) root_direct += profs[i].second;
 
   // Attempt 2: Let OpenMP do a reduction with non-parallel versions.
   SerialNode root_omp;
   #pragma omp parallel for schedule(dynamic) reduction(+:root_omp)
-  for(auto&& pp: profs) root_omp += pp.second;
+  for(std::size_t i = 0; i < profs.size(); i++) root_omp += profs[i].second;
 
   // Attempt 2b: OpenMP reduction but with TBB-based nodes.
   ParallelNode root_omptbb;
   #pragma omp parallel for schedule(dynamic) reduction(+:root_omptbb)
-  for(auto&& pp: profs) root_omptbb += pp.second;
+  for(std::size_t i = 0; i < profs.size(); i++) root_omptbb += profs[i].second;
 
   // Attempt 3: Use a reduction tree to merge the profiles.
   std::vector<SerialNode> roots_tree(omp_get_max_threads());
@@ -286,7 +286,7 @@ int main(int argc, char* const* argv) {
     int num = omp_get_num_threads();
     SerialNode& myroot = roots_tree[id];
     #pragma omp for schedule(dynamic)
-    for(auto&& pp: profs) myroot += pp.second;
+    for(std::size_t i = 0; i < profs.size(); i++) myroot += profs[i].second;
     for(int round = 0; (num >> round) != 0; round++) {
       #pragma omp barrier
       if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round
@@ -307,7 +307,7 @@ int main(int argc, char* const* argv) {
     int num = omp_get_num_threads();
     ParallelNode& myroot = roots_treetbb[id];
     #pragma omp for schedule(dynamic)
-    for(auto&& pp: profs) myroot += pp.second;
+    for(std::size_t i = 0; i < profs.size(); i++) myroot += profs[i].second;
     for(int round = 0; (num >> round) != 0; round++) {
       #pragma omp barrier
       if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round
