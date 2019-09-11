@@ -194,6 +194,7 @@ namespace {
 }
 
 using ParallelNode = Node<stdtbb_umap_2>;
+using LockedNode = Node<stdlock::unordered_map>;
 using SerialNode = Node<std_umap_2>;
 using CompleteNode = Node<std_uset_2>;
 
@@ -241,7 +242,7 @@ static void sanity(const char* name, const X& ours, const Y& orig) {
   ours.foreach([&](const X& n){ all += n; nozero += n; });
   std::cerr << name << ":\n"
     << "  Isomorphic to original: " << (ours.isSameAs(orig) ? "OK" : "FAIL") << "\n"
-    << "  Branching Factor: " << all << "\n"
+    << "  Branching Factor:      " << all << "\n"
     << "  Branching Factor (>0): " << nozero << "\n";
 }
 
@@ -268,15 +269,20 @@ int main(int argc, char* const* argv) {
   #pragma omp parallel for schedule(dynamic)
   for(std::size_t i = 0; i < profs.size(); i++) root_direct += profs[i].second;
 
+  // Attempt 1c: Try a non-TBB parallel implementation.
+  LockedNode root_directlock;
+  #pragma omp parallel for schedule(dynamic)
+  for(std::size_t i = 0; i < profs.size(); i++) root_directlock += profs[i].second;
+
   // Attempt 2: Let OpenMP do a reduction with non-parallel versions.
   SerialNode root_omp;
   #pragma omp parallel for schedule(dynamic) reduction(+:root_omp)
   for(std::size_t i = 0; i < profs.size(); i++) root_omp += profs[i].second;
 
   // Attempt 2b: OpenMP reduction but with TBB-based nodes.
-  ParallelNode root_omptbb;
-  #pragma omp parallel for schedule(dynamic) reduction(+:root_omptbb)
-  for(std::size_t i = 0; i < profs.size(); i++) root_omptbb += profs[i].second;
+  /* ParallelNode root_omptbb; */
+  /* #pragma omp parallel for schedule(dynamic) reduction(+:root_omptbb) */
+  /* for(std::size_t i = 0; i < profs.size(); i++) root_omptbb += profs[i].second; */
 
   // Attempt 3: Use a reduction tree to merge the profiles.
   std::vector<SerialNode> roots_tree(omp_get_max_threads());
@@ -300,40 +306,41 @@ int main(int argc, char* const* argv) {
   SerialNode& root_tree = roots_tree[0];
 
   // Attempt 3b: Reduction tree but with TBB-based nodes.
-  std::vector<ParallelNode> roots_treetbb(omp_get_max_threads());
-  #pragma omp parallel
-  {
-    int id = omp_get_thread_num();
-    int num = omp_get_num_threads();
-    ParallelNode& myroot = roots_treetbb[id];
-    #pragma omp for schedule(dynamic)
-    for(std::size_t i = 0; i < profs.size(); i++) myroot += profs[i].second;
-    for(int round = 0; (num >> round) != 0; round++) {
-      #pragma omp barrier
-      if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round
-        int oid = (id & ~((1<<round)-1)) | (1<<round);
-        if(oid < num) {  // Only if our partner exists
-          myroot += roots_treetbb[oid];
-        }
-      }
-    }
-  }
-  ParallelNode& root_treetbb = roots_treetbb[0];
+  /* std::vector<ParallelNode> roots_treetbb(omp_get_max_threads()); */
+  /* #pragma omp parallel */
+  /* { */
+  /*   int id = omp_get_thread_num(); */
+  /*   int num = omp_get_num_threads(); */
+  /*   ParallelNode& myroot = roots_treetbb[id]; */
+  /*   #pragma omp for schedule(dynamic) */
+  /*   for(std::size_t i = 0; i < profs.size(); i++) myroot += profs[i].second; */
+  /*   for(int round = 0; (num >> round) != 0; round++) { */
+  /*     #pragma omp barrier */
+  /*     if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round */
+  /*       int oid = (id & ~((1<<round)-1)) | (1<<round); */
+  /*       if(oid < num) {  // Only if our partner exists */
+  /*         myroot += roots_treetbb[oid]; */
+  /*       } */
+  /*     } */
+  /*   } */
+  /* } */
+  /* ParallelNode& root_treetbb = roots_treetbb[0]; */
 
   // Now that we're done with the data, construct the original merged tree.
-  Prof::CallPath::Profile* merged = profs[0].second;
-  for(auto&& pp: profs) if(pp.second != merged)
-    merged->merge(*pp.second,
-      Prof::CallPath::Profile::Merge_MergeMetricByName,
-      Prof::CCT::MrgFlg_NormalizeTraceFileY);
-  CompleteNode root_orig(*merged->cct()->root());
+  /* Prof::CallPath::Profile* merged = profs[0].second; */
+  /* for(auto&& pp: profs) if(pp.second != merged) */
+  /*   merged->merge(*pp.second, */
+  /*     Prof::CallPath::Profile::Merge_MergeMetricByName, */
+  /*     Prof::CCT::MrgFlg_NormalizeTraceFileY); */
+  /* CompleteNode root_orig(*merged->cct()->root()); */
 
   // Check all the sanities. Templated above because I'm lazy.
-  sanity("1. Direct Conversion", root_direct, root_orig);
-  sanity("2. OpenMP Reduction", root_omp, root_orig);
-  sanity("2b. OpenMP Reduction w/ TBB", root_omptbb, root_orig);
-  sanity("3. Tree Reduction", root_tree, root_orig);
-  sanity("3b. Tree Reduction w/ TBB", root_treetbb, root_orig);
+  /* sanity("1. Direct Conversion", root_direct, root_orig); */
+  /* sanity("1c. Direct Conversion w/ locks", root_directlock, root_orig); */
+  /* sanity("2. OpenMP Reduction", root_omp, root_orig); */
+  /* sanity("2b. OpenMP Reduction w/ TBB", root_omptbb, root_orig); */
+  /* sanity("3. Tree Reduction", root_tree, root_orig); */
+  /* sanity("3b. Tree Reduction w/ TBB", root_treetbb, root_orig); */
 
   return 0;
 }

@@ -60,3 +60,44 @@ template<
 using vector = tbb::concurrent_vector<T, A>;
 
 }
+
+#include <mutex>
+#include <shared_mutex>
+#include <unordered_map>
+
+namespace stdlock {
+
+template<class K, class V>
+class unordered_map {
+  using core_t = std::unordered_map<K, V>;
+  core_t core;
+  std::shared_mutex lock;
+public:
+  std::pair<typename core_t::const_iterator, bool> insert(const typename core_t::value_type& v) {
+    {
+      std::shared_lock l(lock);
+      auto x = core.find(v.first);
+      if(x != core.end()) return {x, false};
+    }
+    {
+      std::unique_lock l(lock);
+      return core.insert(v);
+    }
+  }
+  std::pair<typename core_t::const_iterator, bool> insert(typename core_t::value_type&& v) {
+    {
+      std::shared_lock l(lock);
+      auto x = core.find(v.first);
+      if(x != core.end()) return {x, false};
+    }
+    {
+      std::unique_lock l(lock);
+      return core.insert(v);
+    }
+  }
+  std::size_t size() const { return core.size(); }
+  typename core_t::const_iterator begin() const { return core.begin(); }
+  typename core_t::const_iterator end() const { return core.end(); }
+};
+
+}
