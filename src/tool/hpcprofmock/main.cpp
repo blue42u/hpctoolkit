@@ -251,36 +251,53 @@ void prof_abort(int ec) { exit(ec); }
 #pragma omp declare reduction(+:ParallelNode:omp_out += omp_in)
 #pragma omp declare reduction(+:SerialNode:omp_out += omp_in)
 
-// Attempt 1: Pour it all into one big pot.
-bool run1(ParallelNode& root_direct, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
-  #pragma omp parallel for schedule(dynamic)
-  for(std::size_t i = 0; i < profs.size(); i++) root_direct += profs[i].second;
-  return true;
-}
-
-// Attempt 1c: Try a non-TBB parallel implementation.
-bool run1c(LockedNode& root_directlock, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+// Attempt 1: Try a non-TBB parallel implementation.
+bool run_direct(LockedNode& root_directlock, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+#if 1
   #pragma omp parallel for schedule(dynamic)
   for(std::size_t i = 0; i < profs.size(); i++) root_directlock += profs[i].second;
   return true;
+#else
+  return false;
+#endif
+}
+
+// Attempt 1b: Pour it all into one big pot.
+bool run_directtbb(ParallelNode& root_direct, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+#if 1
+  #pragma omp parallel for schedule(dynamic)
+  for(std::size_t i = 0; i < profs.size(); i++) root_direct += profs[i].second;
+  return true;
+#else
+  return false;
+#endif
 }
 
 // Attempt 2: Let OpenMP do a reduction with the non-parallel versions.
-bool run2(SerialNode& root_omp, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+bool run_omp(SerialNode& root_omp, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+#if 1
   #pragma omp parallel for schedule(dynamic) reduction(+:root_omp)
   for(std::size_t i = 0; i < profs.size(); i++) root_omp += profs[i].second;
   return true;
+#else
+  return false;
+#endif
 }
 
 // Attempt 2b: OpenMP reduction but with TBB-based nodes.
-bool run2b(ParallelNode& root_omptbb, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+bool run_omptbb(ParallelNode& root_omptbb, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+#if 1
   #pragma omp parallel for schedule(dynamic) reduction(+:root_omptbb)
   for(std::size_t i = 0; i < profs.size(); i++) root_omptbb += profs[i].second;
   return true;
+#else
+  return false;
+#endif
 }
 
 // Attempt 3: Use a reduction tree to merge the profiles.
-bool run3(std::vector<SerialNode>& roots_tree, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+bool run_tree(std::vector<SerialNode>& roots_tree, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+#if 1
   #pragma omp parallel
   {
     int id = omp_get_thread_num();
@@ -299,10 +316,14 @@ bool run3(std::vector<SerialNode>& roots_tree, std::vector<std::pair<std::string
     }
   }
   return true;
+#else
+  return false;
+#endif
 }
 
 // Attempt 3b: Reduction tree but with TBB-based nodes.
-bool run3b(std::vector<ParallelNode>& roots_treetbb, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+bool run_treetbb(std::vector<ParallelNode>& roots_treetbb, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+#if 1
   #pragma omp parallel
   {
     int id = omp_get_thread_num();
@@ -321,6 +342,9 @@ bool run3b(std::vector<ParallelNode>& roots_treetbb, std::vector<std::pair<std::
     }
   }
   return true;
+#else
+  return false;
+#endif
 }
 
 int main(int argc, char* const* argv) {
@@ -337,40 +361,42 @@ int main(int argc, char* const* argv) {
     profs.push_back({fn, Prof::CallPath::Profile::make(fn.c_str(), 0, NULL)});
 
   // Storage for all the attempts. Up here to keep the destruction out of the times.
-  ParallelNode root_direct;
-  LockedNode root_directlock;
+  LockedNode root_direct;
+  ParallelNode root_directtbb;
   SerialNode root_omp;
   ParallelNode root_omptbb;
   std::vector<SerialNode> roots_tree(omp_get_max_threads());
   std::vector<ParallelNode> roots_treetbb(omp_get_max_threads());
 
   // Run through all our attempts
-  bool check_direct = run1(root_direct, profs);
-  bool check_directlock = run1c(root_directlock, profs);
-  bool check_omp = run2(root_omp, profs);
-  bool check_omptbb = run2b(root_omptbb, profs);
-  bool check_tree = run3(roots_tree, profs);
-  bool check_treetbb = run3b(roots_treetbb, profs);
+  bool check_direct = run_direct(root_direct, profs);
+  bool check_directtbb = run_directtbb(root_directtbb, profs);
+  bool check_omp = run_omp(root_omp, profs);
+  bool check_omptbb = run_omptbb(root_omptbb, profs);
+  bool check_tree = run_tree(roots_tree, profs);
+  bool check_treetbb = run_treetbb(roots_treetbb, profs);
 
   // Alias a few names that we can't otherwise
   SerialNode& root_tree = roots_tree[0];
   ParallelNode& root_treetbb = roots_treetbb[0];
 
+  bool check = true;
   // Now that we're done with the data, construct the original merged tree.
   Prof::CallPath::Profile* merged = profs[0].second;
-  for(auto&& pp: profs) if(pp.second != merged)
-    merged->merge(*pp.second,
-      Prof::CallPath::Profile::Merge_MergeMetricByName,
-      Prof::CCT::MrgFlg_NormalizeTraceFileY);
+  if(check)
+    for(auto&& pp: profs) if(pp.second != merged)
+      merged->merge(*pp.second,
+        Prof::CallPath::Profile::Merge_MergeMetricByName,
+        Prof::CCT::MrgFlg_NormalizeTraceFileY);
   CompleteNode root_orig(*merged->cct()->root());
 
   // Check all the sanities. Templated above because I'm lazy.
-  if(check_direct) sanity("1. Direct Conversion", root_direct, root_orig);
-  if(check_directlock) sanity("1c. Direct Conversion w/ locks", root_directlock, root_orig);
-  if(check_omp) sanity("2. OpenMP Reduction", root_omp, root_orig);
-  if(check_omptbb) sanity("2b. OpenMP Reduction w/ TBB", root_omptbb, root_orig);
-  if(check_tree) sanity("3. Tree Reduction", root_tree, root_orig);
-  if(check_treetbb) sanity("3b. Tree Reduction w/ TBB", root_treetbb, root_orig);
+  if(check && check_direct) sanity("1. Direct Conversion w/ locks", root_direct, root_orig);
+  if(check && check_directtbb) sanity("1b. Direct Conversion w/ TBB", root_directtbb, root_orig);
+  if(check && check_omp) sanity("2. OpenMP Reduction", root_omp, root_orig);
+  if(check && check_omptbb) sanity("2b. OpenMP Reduction w/ TBB", root_omptbb, root_orig);
+  if(check && check_tree) sanity("3. Tree Reduction", root_tree, root_orig);
+  if(check && check_treetbb) sanity("3b. Tree Reduction w/ TBB", root_treetbb, root_orig);
 
   return 0;
 }
