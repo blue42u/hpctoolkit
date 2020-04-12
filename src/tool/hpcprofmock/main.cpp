@@ -200,7 +200,7 @@ using CompleteNode = Node<std_uset_2>;
 
 struct Args : public Analysis::ArgsHPCProf {
   void parse(int c, const char* const v[]) {
-    Analysis::ArgsHPCProf::parse(c, v);
+    Analysis::ArgsHPCProf::parse(c, v, Analysis::AppType::APP_HPCPROF);
   }
   static const std::string cmd;
   const std::string getCmd() const { return cmd; }
@@ -251,41 +251,36 @@ void prof_abort(int ec) { exit(ec); }
 #pragma omp declare reduction(+:ParallelNode:omp_out += omp_in)
 #pragma omp declare reduction(+:SerialNode:omp_out += omp_in)
 
-int main(int argc, char* const* argv) {
-  std::cerr << "WARNING: This is a mockup!\n";
-
-  Args args;
-  args.parse(argc, argv);
-  RealPathMgr::singleton().searchPaths(args.searchPathStr());
-  auto nArgs = Analysis::Util::normalizeProfileArgs(args.profileFiles);
-
-  // Read in all the data
-  std::vector<std::pair<std::string, Prof::CallPath::Profile*>> profs;
-  for(auto&& fn: *nArgs.paths)
-    profs.push_back({fn, Prof::CallPath::Profile::make(fn.c_str(), 0, NULL)});
-
-  // Attempt 1: Pour it all into one big pot.
-  ParallelNode root_direct;
+// Attempt 1: Pour it all into one big pot.
+bool run1(ParallelNode& root_direct, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
   #pragma omp parallel for schedule(dynamic)
   for(std::size_t i = 0; i < profs.size(); i++) root_direct += profs[i].second;
+  return true;
+}
 
-  // Attempt 1c: Try a non-TBB parallel implementation.
-  LockedNode root_directlock;
+// Attempt 1c: Try a non-TBB parallel implementation.
+bool run1c(LockedNode& root_directlock, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
   #pragma omp parallel for schedule(dynamic)
   for(std::size_t i = 0; i < profs.size(); i++) root_directlock += profs[i].second;
+  return true;
+}
 
-  // Attempt 2: Let OpenMP do a reduction with non-parallel versions.
-  SerialNode root_omp;
+// Attempt 2: Let OpenMP do a reduction with the non-parallel versions.
+bool run2(SerialNode& root_omp, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
   #pragma omp parallel for schedule(dynamic) reduction(+:root_omp)
   for(std::size_t i = 0; i < profs.size(); i++) root_omp += profs[i].second;
+  return true;
+}
 
-  // Attempt 2b: OpenMP reduction but with TBB-based nodes.
-  /* ParallelNode root_omptbb; */
-  /* #pragma omp parallel for schedule(dynamic) reduction(+:root_omptbb) */
-  /* for(std::size_t i = 0; i < profs.size(); i++) root_omptbb += profs[i].second; */
+// Attempt 2b: OpenMP reduction but with TBB-based nodes.
+bool run2b(ParallelNode& root_omptbb, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+  #pragma omp parallel for schedule(dynamic) reduction(+:root_omptbb)
+  for(std::size_t i = 0; i < profs.size(); i++) root_omptbb += profs[i].second;
+  return true;
+}
 
-  // Attempt 3: Use a reduction tree to merge the profiles.
-  std::vector<SerialNode> roots_tree(omp_get_max_threads());
+// Attempt 3: Use a reduction tree to merge the profiles.
+bool run3(std::vector<SerialNode>& roots_tree, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
   #pragma omp parallel
   {
     int id = omp_get_thread_num();
@@ -303,44 +298,79 @@ int main(int argc, char* const* argv) {
       }
     }
   }
-  SerialNode& root_tree = roots_tree[0];
+  return true;
+}
 
-  // Attempt 3b: Reduction tree but with TBB-based nodes.
-  /* std::vector<ParallelNode> roots_treetbb(omp_get_max_threads()); */
-  /* #pragma omp parallel */
-  /* { */
-  /*   int id = omp_get_thread_num(); */
-  /*   int num = omp_get_num_threads(); */
-  /*   ParallelNode& myroot = roots_treetbb[id]; */
-  /*   #pragma omp for schedule(dynamic) */
-  /*   for(std::size_t i = 0; i < profs.size(); i++) myroot += profs[i].second; */
-  /*   for(int round = 0; (num >> round) != 0; round++) { */
-  /*     #pragma omp barrier */
-  /*     if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round */
-  /*       int oid = (id & ~((1<<round)-1)) | (1<<round); */
-  /*       if(oid < num) {  // Only if our partner exists */
-  /*         myroot += roots_treetbb[oid]; */
-  /*       } */
-  /*     } */
-  /*   } */
-  /* } */
-  /* ParallelNode& root_treetbb = roots_treetbb[0]; */
+// Attempt 3b: Reduction tree but with TBB-based nodes.
+bool run3b(std::vector<ParallelNode>& roots_treetbb, std::vector<std::pair<std::string, Prof::CallPath::Profile*>>& profs) {
+  #pragma omp parallel
+  {
+    int id = omp_get_thread_num();
+    int num = omp_get_num_threads();
+    ParallelNode& myroot = roots_treetbb[id];
+    #pragma omp for schedule(dynamic)
+    for(std::size_t i = 0; i < profs.size(); i++) myroot += profs[i].second;
+    for(int round = 0; (num >> round) != 0; round++) {
+      #pragma omp barrier
+      if((id & ((1<<(round+1))-1)) == 0) {  // We participate in this round
+        int oid = (id & ~((1<<round)-1)) | (1<<round);
+        if(oid < num) {  // Only if our partner exists
+          myroot += roots_treetbb[oid];
+        }
+      }
+    }
+  }
+  return true;
+}
+
+int main(int argc, char* const* argv) {
+  std::cerr << "WARNING: This is a mockup!\n";
+
+  Args args;
+  args.parse(argc, argv);
+  RealPathMgr::singleton().searchPaths(args.searchPathStr());
+  auto nArgs = Analysis::Util::normalizeProfileArgs(args.profileFiles);
+
+  // Read in all the data
+  std::vector<std::pair<std::string, Prof::CallPath::Profile*>> profs;
+  for(auto&& fn: *nArgs.paths)
+    profs.push_back({fn, Prof::CallPath::Profile::make(fn.c_str(), 0, NULL)});
+
+  // Storage for all the attempts. Up here to keep the destruction out of the times.
+  ParallelNode root_direct;
+  LockedNode root_directlock;
+  SerialNode root_omp;
+  ParallelNode root_omptbb;
+  std::vector<SerialNode> roots_tree(omp_get_max_threads());
+  std::vector<ParallelNode> roots_treetbb(omp_get_max_threads());
+
+  // Run through all our attempts
+  bool check_direct = run1(root_direct, profs);
+  bool check_directlock = run1c(root_directlock, profs);
+  bool check_omp = run2(root_omp, profs);
+  bool check_omptbb = run2b(root_omptbb, profs);
+  bool check_tree = run3(roots_tree, profs);
+  bool check_treetbb = run3b(roots_treetbb, profs);
+
+  // Alias a few names that we can't otherwise
+  SerialNode& root_tree = roots_tree[0];
+  ParallelNode& root_treetbb = roots_treetbb[0];
 
   // Now that we're done with the data, construct the original merged tree.
-  /* Prof::CallPath::Profile* merged = profs[0].second; */
-  /* for(auto&& pp: profs) if(pp.second != merged) */
-  /*   merged->merge(*pp.second, */
-  /*     Prof::CallPath::Profile::Merge_MergeMetricByName, */
-  /*     Prof::CCT::MrgFlg_NormalizeTraceFileY); */
-  /* CompleteNode root_orig(*merged->cct()->root()); */
+  Prof::CallPath::Profile* merged = profs[0].second;
+  for(auto&& pp: profs) if(pp.second != merged)
+    merged->merge(*pp.second,
+      Prof::CallPath::Profile::Merge_MergeMetricByName,
+      Prof::CCT::MrgFlg_NormalizeTraceFileY);
+  CompleteNode root_orig(*merged->cct()->root());
 
   // Check all the sanities. Templated above because I'm lazy.
-  /* sanity("1. Direct Conversion", root_direct, root_orig); */
-  /* sanity("1c. Direct Conversion w/ locks", root_directlock, root_orig); */
-  /* sanity("2. OpenMP Reduction", root_omp, root_orig); */
-  /* sanity("2b. OpenMP Reduction w/ TBB", root_omptbb, root_orig); */
-  /* sanity("3. Tree Reduction", root_tree, root_orig); */
-  /* sanity("3b. Tree Reduction w/ TBB", root_treetbb, root_orig); */
+  if(check_direct) sanity("1. Direct Conversion", root_direct, root_orig);
+  if(check_directlock) sanity("1c. Direct Conversion w/ locks", root_directlock, root_orig);
+  if(check_omp) sanity("2. OpenMP Reduction", root_omp, root_orig);
+  if(check_omptbb) sanity("2b. OpenMP Reduction w/ TBB", root_omptbb, root_orig);
+  if(check_tree) sanity("3. Tree Reduction", root_tree, root_orig);
+  if(check_treetbb) sanity("3b. Tree Reduction w/ TBB", root_treetbb, root_orig);
 
   return 0;
 }
