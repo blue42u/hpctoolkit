@@ -55,7 +55,9 @@
 #include <inttypes.h>
 
 
+__attribute__((visibility("default")))
 void hpcrun_set_using_threads(bool flag);
+__attribute__((visibility("default")))
 bool hpcrun_using_threads_p();
 
 #endif // thread_use_h

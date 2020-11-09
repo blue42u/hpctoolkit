@@ -84,6 +84,7 @@
 // hpcrun wrappers for ompt interfaces
 //------------------------------------------------------------------------------
 
+__attribute__((visibility("default")))
 int 
 hpcrun_ompt_get_parallel_info
 (
@@ -93,6 +94,7 @@ hpcrun_ompt_get_parallel_info
 );
 
 
+__attribute__((visibility("default")))
 uint64_t 
 hpcrun_ompt_get_unique_id
 (
@@ -100,6 +102,7 @@ hpcrun_ompt_get_unique_id
 );
 
 
+__attribute__((visibility("default")))
 ompt_data_t * 
 hpcrun_ompt_get_task_data
 (
@@ -107,6 +110,7 @@ hpcrun_ompt_get_task_data
 );
 
 
+__attribute__((visibility("default")))
 uint64_t 
 hpcrun_ompt_outermost_parallel_id
 (
@@ -114,6 +118,7 @@ hpcrun_ompt_outermost_parallel_id
 );
 
 
+__attribute__((visibility("default")))
 uint64_t 
 hpcrun_ompt_get_parallel_info_id
 (
@@ -121,6 +126,7 @@ hpcrun_ompt_get_parallel_info_id
 );
 
 
+__attribute__((visibility("default")))
 void 
 hpcrun_ompt_get_parallel_info_id_pointer
 (
@@ -129,6 +135,7 @@ hpcrun_ompt_get_parallel_info_id_pointer
 );
 
 
+__attribute__((visibility("default")))
 ompt_state_t 
 hpcrun_ompt_get_state
 (
@@ -136,6 +143,7 @@ hpcrun_ompt_get_state
 );
 
 
+__attribute__((visibility("default")))
 ompt_frame_t *
 hpcrun_ompt_get_task_frame
 (
@@ -143,6 +151,7 @@ hpcrun_ompt_get_task_frame
 );
 
 
+__attribute__((visibility("default")))
 int 
 hpcrun_ompt_get_thread_num
 (
@@ -151,6 +160,7 @@ hpcrun_ompt_get_thread_num
 
 
 // returns 1 if the current state represents a form of overhead
+__attribute__((visibility("default")))
 int 
 hpcrun_omp_state_is_overhead
 (
@@ -158,6 +168,7 @@ hpcrun_omp_state_is_overhead
 );
 
 
+__attribute__((visibility("default")))
 void *
 hpcrun_ompt_get_idle_frame
 (
@@ -165,6 +176,7 @@ hpcrun_ompt_get_idle_frame
 );
 
 
+__attribute__((visibility("default")))
 uint64_t 
 hpcrun_ompt_get_blame_target
 (
@@ -172,6 +184,7 @@ hpcrun_ompt_get_blame_target
 );
 
 
+__attribute__((visibility("default")))
 int 
 hpcrun_ompt_elide_frames
 (
@@ -203,6 +216,7 @@ ompt_task_full_context_p
 // allocate and free notifications
 //-----------------------------------------------------------------------------
 
+__attribute__((visibility("default")))
 ompt_notification_t * 
 hpcrun_ompt_notification_alloc
 (
@@ -211,6 +225,7 @@ hpcrun_ompt_notification_alloc
 
 
 // free adds entity to freelist
+__attribute__((visibility("default")))
 void 
 hpcrun_ompt_notification_free
 (
@@ -222,6 +237,7 @@ hpcrun_ompt_notification_free
 // allocate and free thread's regions
 //-----------------------------------------------------------------------------
 
+__attribute__((visibility("default")))
 ompt_trl_el_t * 
 hpcrun_ompt_trl_el_alloc
 (
@@ -229,6 +245,7 @@ hpcrun_ompt_trl_el_alloc
 );
 
 
+__attribute__((visibility("default")))
 void 
 hpcrun_ompt_trl_el_free
 (
@@ -236,6 +253,7 @@ hpcrun_ompt_trl_el_free
 );
 
 
+__attribute__((visibility("default")))
 ompt_region_data_t * 
 hpcrun_ompt_get_region_data
 (
@@ -247,6 +265,7 @@ hpcrun_ompt_get_region_data
 // access to region data
 //-----------------------------------------------------------------------------
 
+__attribute__((visibility("default")))
 ompt_region_data_t * 
 hpcrun_ompt_get_current_region_data
 (
@@ -254,6 +273,7 @@ hpcrun_ompt_get_current_region_data
 );
 
 
+__attribute__((visibility("default")))
 ompt_region_data_t * 
 hpcrun_ompt_get_parent_region_data
 (

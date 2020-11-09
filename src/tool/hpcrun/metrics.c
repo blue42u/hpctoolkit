@@ -451,6 +451,7 @@ hpcrun_metric_set_loc(metric_data_list_t *rv, int id)
 }
 
 
+__attribute__((visibility("default")))
 void
 hpcrun_metric_std(int metric_id, metric_data_list_t* set,
 		  char operation, hpcrun_metricVal_t val)

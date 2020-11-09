@@ -132,6 +132,7 @@ hpcrun_check_for_new_loadmap(epoch_t* epoch)
   }
 }
 
+__attribute__((visibility("default")))
 int
 hpcrun_epoch_fini(epoch_t *x){
 

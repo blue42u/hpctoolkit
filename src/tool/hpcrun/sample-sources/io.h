@@ -47,7 +47,9 @@
 #ifndef _HPCRUN_IO_H_
 #define _HPCRUN_IO_H_
 
+__attribute__((visibility("default")))
 int hpcrun_metric_id_read(void);
+__attribute__((visibility("default")))
 int hpcrun_metric_id_write(void);
 
 #endif

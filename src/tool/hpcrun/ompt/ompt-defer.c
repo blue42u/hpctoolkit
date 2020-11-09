@@ -672,6 +672,7 @@ register_to_all_regions
 
 
 // insert a path to the root and return the path in the root
+__attribute__((visibility("default")))
 cct_node_t*
 hpcrun_cct_insert_path_return_leaf_tmp
 (

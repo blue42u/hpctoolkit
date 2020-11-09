@@ -100,23 +100,31 @@ typedef bool bt_fn(backtrace_t* bt, ucontext_t* context);
 typedef void* bt_fn_arg;
 typedef void (*bt_mut_fn)(backtrace_t* bt, bt_fn_arg arg);
 
+__attribute__((visibility("default")))
 bool hpcrun_backtrace_std(backtrace_t* bt, ucontext_t* context);
 
+__attribute__((visibility("default")))
 frame_t* hpcrun_skip_chords(frame_t* bt_outer, frame_t* bt_inner, 
 			    int skip);
 
+__attribute__((visibility("default")))
 void hpcrun_bt_dump(frame_t* unwind, const char* tag);
 
+__attribute__((visibility("default")))
 void     hpcrun_bt_init(backtrace_t* bt, size_t size);
 
+__attribute__((visibility("default")))
 bool     hpcrun_backtrace_std(backtrace_t* bt, ucontext_t* context);
 
+__attribute__((visibility("default")))
 bool hpcrun_generate_backtrace(backtrace_info_t* bt,
 			       ucontext_t* context, int skipInner);
 
+__attribute__((visibility("default")))
 bool hpcrun_generate_backtrace_no_trampoline(backtrace_info_t* bt,
 					     ucontext_t* context, int skipInner);
 
+__attribute__((visibility("default")))
 extern bool hpcrun_no_unwind;
 
 #endif // hpcrun_backtrace_h

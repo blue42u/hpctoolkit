@@ -464,6 +464,8 @@ foreach dep : _d_srcs.dependencies()
 endforeach
 
 libhpcrun_lib = shared_library('hpcrun', _d_srcs.sources(),
+  gnu_symbol_visibility: 'hidden',
+  link_args: '-Wl,--exclude-libs,ALL',
   dependencies: _d_srcs.dependencies() + _d_ddep
     + [cc.find_library('dl'), cc.find_library('rt'), dependency('threads')],
   link_with: [prof_lean_lib, support_lean_lib],

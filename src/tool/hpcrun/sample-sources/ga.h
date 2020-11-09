@@ -67,12 +67,18 @@
 
 //***************************************************************************
 
+__attribute__((visibility("default")))
 extern uint64_t hpcrun_ga_period;
 
+__attribute__((visibility("default")))
 extern int hpcrun_ga_metricId_onesidedOp;
+__attribute__((visibility("default")))
 extern int hpcrun_ga_metricId_collectiveOp;
+__attribute__((visibility("default")))
 extern int hpcrun_ga_metricId_latency;
+__attribute__((visibility("default")))
 extern int hpcrun_ga_metricId_latencyExcess;
+__attribute__((visibility("default")))
 extern int hpcrun_ga_metricId_bytesXfr;
 
 //***************************************************************************
@@ -83,7 +89,9 @@ extern int hpcrun_ga_metricId_bytesXfr;
 #define hpcrun_ga_metricId_dataTblSz 10
 #define hpcrun_ga_metricId_dataStrLen 32
 
+__attribute__((visibility("default")))
 extern int hpcrun_ga_metricId_dataTblIdx_next;
+__attribute__((visibility("default")))
 extern int hpcrun_ga_metricId_dataTblIdx_max; // exclusive upper bound
 
 typedef struct hpcrun_ga_metricId_dataDesc {
@@ -92,6 +100,7 @@ typedef struct hpcrun_ga_metricId_dataDesc {
 } hpcrun_ga_metricId_dataDesc_t;
 
 
+__attribute__((visibility("default")))
 extern hpcrun_ga_metricId_dataDesc_t hpcrun_ga_metricId_dataTbl[];
 
 static inline hpcrun_ga_metricId_dataDesc_t*
@@ -101,6 +110,7 @@ hpcrun_ga_metricId_dataTbl_find(int idx)
 }
 
 
+__attribute__((visibility("default")))
 int
 hpcrun_ga_dataIdx_new(const char* name);
 

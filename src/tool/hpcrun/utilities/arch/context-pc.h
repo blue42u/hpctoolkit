@@ -55,6 +55,7 @@
 
 #include <utilities/arch/mcontext.h>
 
+__attribute__((visibility("default")))
 void* hpcrun_context_pc(void* context);
 
 

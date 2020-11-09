@@ -84,21 +84,31 @@ enum trampoline_constants {
 // *****************************************************************************
 
 
+__attribute__((visibility("default")))
 extern void hpcrun_init_trampoline_info(void);
 
 // returns true if address is in the assembly language trampoline code, else false.
 
+__attribute__((visibility("default")))
 extern bool hpcrun_trampoline_interior(void* addr);
+__attribute__((visibility("default")))
 extern bool hpcrun_trampoline_at_entry(void* addr);
 
+__attribute__((visibility("default")))
 extern void* hpcrun_trampoline_handler(void);
 
+__attribute__((visibility("default")))
 extern void hpcrun_trampoline_insert(cct_node_t* node);
+__attribute__((visibility("default")))
 extern void hpcrun_trampoline_remove(void);
+__attribute__((visibility("default")))
 extern void hpcrun_trampoline_bt_dump(void);
 
+__attribute__((visibility("default")))
 extern bool hpcrun_trampoline_update(frame_t* stop_frame);
 
+__attribute__((visibility("default")))
 extern void hpcrun_trampoline(void);
+__attribute__((visibility("default")))
 extern void hpcrun_trampoline_end(void);
 #endif // trampoline_h

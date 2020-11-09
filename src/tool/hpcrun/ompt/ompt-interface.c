@@ -686,6 +686,7 @@ ompt_finalize
 }
 
 
+__attribute__((visibility("default")))
 ompt_start_tool_result_t *
 ompt_start_tool
 (
@@ -767,6 +768,7 @@ hpcrun_ompt_get_state
   return ompt_state_undefined;
 }
 
+__attribute__((visibility("default")))
 ompt_state_t
 hpcrun_ompt_get_state_only
 (

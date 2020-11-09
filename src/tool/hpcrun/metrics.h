@@ -104,73 +104,101 @@ typedef cct_metric_data_t (*metric_bin_fn)(cct_metric_data_t v1, cct_metric_data
 
 typedef struct kind_info_t kind_info_t;
 
+__attribute__((visibility("default")))
 kind_info_t* hpcrun_metrics_new_kind();
 
+__attribute__((visibility("default")))
 void hpcrun_close_kind(kind_info_t *kind);
 
+__attribute__((visibility("default")))
 void hpcrun_pre_allocate_metrics(size_t num);
 
+__attribute__((visibility("default")))
 int hpcrun_get_num_metrics(kind_info_t *kind);
 
+__attribute__((visibility("default")))
 void hpcrun_metrics_data_finalize();
 
+__attribute__((visibility("default")))
 int hpcrun_get_num_kind_metrics(void);
 
+__attribute__((visibility("default")))
 metric_data_list_t* hpcrun_reify_metric_data_list_kind(metric_data_list_t* rv, int metric_id);
 
+__attribute__((visibility("default")))
 metric_desc_t* hpcrun_id2metric(int id);
 
+__attribute__((visibility("default")))
 void hpcrun_metrics_data_dump();
 
 // non finalizing
+__attribute__((visibility("default")))
 metric_desc_t* hpcrun_id2metric_linked(int metric_id);
 
 // non finalizing
+__attribute__((visibility("default")))
 void hpcrun_set_display(int metric_id, uint8_t show);
 
+__attribute__((visibility("default")))
 void hpcrun_set_percent(int metric_id, uint8_t show_percent);
 
+__attribute__((visibility("default")))
 metric_desc_p_tbl_t* hpcrun_get_metric_tbl(kind_info_t**);
 
+__attribute__((visibility("default")))
 metric_upd_proc_t* hpcrun_get_metric_proc(int metric_id);
 
+__attribute__((visibility("default")))
 int hpcrun_set_new_metric_info_w_fn(kind_info_t *kind, const char* name,
 				    MetricFlags_ValFmt_t valFmt, size_t period,
 				    metric_upd_proc_t upd_fn, metric_desc_properties_t prop);
 
+__attribute__((visibility("default")))
 int hpcrun_set_new_metric_desc(kind_info_t *kind, const char* name,
 		        const char *description,
 				MetricFlags_ValFmt_t valFmt, size_t period,
 				metric_upd_proc_t upd_fn, metric_desc_properties_t prop);
 
+__attribute__((visibility("default")))
 int hpcrun_set_new_metric_desc_and_period(kind_info_t *kind, const char* name, const char *description,
 				      MetricFlags_ValFmt_t valFmt, size_t period, metric_desc_properties_t prop);
 
+__attribute__((visibility("default")))
 int hpcrun_set_new_metric_info_and_period(kind_info_t *kind, const char* name,
 					  MetricFlags_ValFmt_t valFmt, size_t period, metric_desc_properties_t prop);
 
+__attribute__((visibility("default")))
 int hpcrun_set_new_metric_info(kind_info_t *kind, const char* name);
 
+__attribute__((visibility("default")))
 void hpcrun_set_metric_name(int metric_id, char* name);
 
 // metric set operations
 
+__attribute__((visibility("default")))
 extern cct_metric_data_t* hpcrun_metric_set_loc(metric_data_list_t* rv, int id);
+__attribute__((visibility("default")))
 extern void hpcrun_metric_std_set(int metric_id, metric_data_list_t* set,
 				  hpcrun_metricVal_t value);
+__attribute__((visibility("default")))
 extern void hpcrun_metric_std_inc(int metric_id, metric_data_list_t* set,
 				  hpcrun_metricVal_t incr);
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_new_metric_data_list(int metric_id);
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_new_metric_data_list_kind(kind_info_t *kind);
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_new_metric_data_list_kind_final(kind_info_t *kind);
 
 //
 // copy a metric set
 //
+__attribute__((visibility("default")))
 extern void hpcrun_metric_set_dense_copy(cct_metric_data_t* dest,
 					 metric_data_list_t* list,
 					 int num_metrics);
 
+__attribute__((visibility("default")))
 extern metric_data_list_t *hpcrun_merge_cct_metrics(metric_data_list_t *dest, metric_data_list_t *source);
 
 #endif // METRICS_H

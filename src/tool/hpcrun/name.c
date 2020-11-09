@@ -106,11 +106,13 @@ const char *hpcrun_get_executable_name()
 }
 
 
+__attribute__((visibility("default")))
 void hpcrun_set_mpirank(int rank)
 {
   mpirank = rank;
 }
 
+__attribute__((visibility("default")))
 int hpcrun_get_mpirank()
 {
    return mpirank;

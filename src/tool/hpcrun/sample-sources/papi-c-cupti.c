@@ -378,6 +378,7 @@ static sync_info_list_t cuda_component = {
 };
 
 
+__attribute__((visibility("default")))
 void
 SS_OBJ_CONSTRUCTOR(papi_c_cupti)(void)
 {

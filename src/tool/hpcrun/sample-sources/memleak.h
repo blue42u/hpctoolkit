@@ -69,9 +69,13 @@
  * interface operations
  *****************************************************************************/
 
+__attribute__((visibility("default")))
 int hpcrun_memleak_alloc_id();
+__attribute__((visibility("default")))
 int hpcrun_memleak_active();
+__attribute__((visibility("default")))
 void hpcrun_alloc_inc(cct_node_t* node, int incr);
+__attribute__((visibility("default")))
 void hpcrun_free_inc(cct_node_t* node, int incr);
 
 #endif // sample_source_memleak_h

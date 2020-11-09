@@ -47,11 +47,16 @@
 #ifndef _CSPROF_DLFNS_H_
 #define _CSPROF_DLFNS_H_
 
+__attribute__((visibility("default")))
 void hpcrun_pre_dlopen(const char *path, int flags);
+__attribute__((visibility("default")))
 void hpcrun_dlopen(const char *module_name, int flags, void *handle);
+__attribute__((visibility("default")))
 void hpcrun_dlclose(void *handle);
+__attribute__((visibility("default")))
 void hpcrun_post_dlclose(void *handle, int ret);
 
+__attribute__((visibility("default")))
 long hpcrun_dlopen_pending(void);
 
 #endif

@@ -568,6 +568,7 @@ hpcrun_cct_insert_dummy(cct_node_t* node, uint16_t lm_ip)
   return dummy;
 }
 
+__attribute__((visibility("default")))
 cct_node_t*
 hpcrun_cct_delete_addr(cct_node_t* node, cct_addr_t* frm)
 {

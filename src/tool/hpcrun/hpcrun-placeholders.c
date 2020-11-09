@@ -34,6 +34,7 @@ static pthread_once_t is_initialized = PTHREAD_ONCE_INIT;
 // private operations
 //******************************************************************************
 
+__attribute__((visibility("default")))
 void
 hpcrun_no_activity
 (

@@ -79,6 +79,7 @@
 #include "x86-decoder.h"
 #include "x86-unwind-analysis.h"
 #include "x86-interval-arg.h"
+#include "x86-cold-path.h"
 
 #include <messages/messages.h>
 

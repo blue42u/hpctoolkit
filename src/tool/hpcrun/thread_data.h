@@ -291,32 +291,47 @@ typedef struct thread_data_t {
 static const size_t HPCRUN_TraceBufferSz = HPCIO_RWBufferSz;
 
 
+__attribute__((visibility("default")))
 void hpcrun_init_pthread_key(void);
+__attribute__((visibility("default")))
 void hpcrun_set_thread0_data(void);
+__attribute__((visibility("default")))
 void hpcrun_set_thread_data(thread_data_t *td);
 
 
 #define TD_GET(field) hpcrun_get_thread_data()->field
 
+__attribute__((visibility("default")))
 extern thread_data_t* (*hpcrun_get_thread_data)(void);
+__attribute__((visibility("default")))
 extern bool           (*hpcrun_td_avail)(void);
+__attribute__((visibility("default")))
 extern thread_data_t* hpcrun_safe_get_td(void);
 
+__attribute__((visibility("default")))
 void hpcrun_unthreaded_data(void);
+__attribute__((visibility("default")))
 void hpcrun_threaded_data(void);
 
 
+__attribute__((visibility("default")))
 extern thread_data_t* hpcrun_allocate_thread_data(int id);
 
+__attribute__((visibility("default")))
 void
 hpcrun_thread_data_init(int id, cct_ctxt_t* thr_ctxt, int is_child, size_t n_sources);
 
 
+__attribute__((visibility("default")))
 void     hpcrun_cached_bt_adjust_size(size_t n);
+__attribute__((visibility("default")))
 frame_t* hpcrun_expand_btbuf(void);
+__attribute__((visibility("default")))
 void     hpcrun_ensure_btbuf_avail(void);
 
+__attribute__((visibility("default")))
 void           hpcrun_thread_data_reuse_init(cct_ctxt_t* thr_ctxt);
+__attribute__((visibility("default")))
 void           hpcrun_cached_bt_adjust_size(size_t n);
 
 // utilities to match previous api

@@ -50,9 +50,13 @@
 #include <sample-sources/sample_source_obj.h>
 #define MAX_POSSIBLE_SAMPLE_SOURCES 12
 
+__attribute__((visibility("default")))
 void hpcrun_ss_register(sample_source_t *src);
+__attribute__((visibility("default")))
 sample_source_t *hpcrun_source_can_process(char *event);
+__attribute__((visibility("default")))
 void hpcrun_registered_sources_init(void);
+__attribute__((visibility("default")))
 void hpcrun_display_avail_events(void);
 
 #endif // REGISTERED_SAMPLE_SOURCES_H

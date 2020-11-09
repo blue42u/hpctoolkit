@@ -69,24 +69,32 @@
 // interface operations
 //******************************************************************************
 
+__attribute__((visibility("default")))
 void hpcrun_threadmgr_thread_new();
 
+__attribute__((visibility("default")))
 void hpcrun_threadmgr_thread_delete();
 
+__attribute__((visibility("default")))
 int hpcrun_threadmgr_thread_count();
 
+__attribute__((visibility("default")))
 bool
 hpcrun_threadMgr_data_get(int id, cct_ctxt_t* thr_ctxt, thread_data_t **data);
 
+__attribute__((visibility("default")))
 void
 hpcrun_threadMgr_non_compact_data_get(int id, cct_ctxt_t* thr_ctxt, thread_data_t **data);
 
+__attribute__((visibility("default")))
 void
 hpcrun_threadMgr_data_put( epoch_t *epoch, thread_data_t *data, int no_separator);
 
+__attribute__((visibility("default")))
 void
 hpcrun_threadMgr_data_fini(thread_data_t *td);
 
+__attribute__((visibility("default")))
 int
 hpcrun_threadMgr_compact_thread();
 

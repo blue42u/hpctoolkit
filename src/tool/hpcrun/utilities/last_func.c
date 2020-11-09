@@ -45,6 +45,7 @@
 // ******************************************************* EndRiceCopyright *
 
 /* provided to figure out where libcsprof's .text section ends */
+__attribute__((visibility("default")))
 void
 hpcrun_last_func()
 {

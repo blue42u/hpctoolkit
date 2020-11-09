@@ -117,6 +117,7 @@ find_poll(void)
 // interface operations
 //******************************************************************************
 
+__attribute__((visibility("default")))
 int 
 MONITOR_EXT_WRAP_NAME(poll)
   (struct pollfd *fds, nfds_t nfds, int init_timeout)

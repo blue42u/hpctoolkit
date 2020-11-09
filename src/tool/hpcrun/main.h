@@ -54,35 +54,48 @@
 // #include <tool/hpcrun/sample-sources/nvidia/stream-tracing.h>
 //#include <tool/hpcrun/sample-sources/amd/amd.h>
 
+__attribute__((visibility("default")))
 extern bool hpcrun_is_initialized();
 
+__attribute__((visibility("default")))
 extern bool hpcrun_is_safe_to_sync(const char* fn);
+__attribute__((visibility("default")))
 extern void hpcrun_set_safe_to_sync(void);
+__attribute__((visibility("default")))
 extern void hpcrun_set_real_siglongjmp(void);
 
+__attribute__((visibility("default")))
 extern void hpcrun_force_dlopen(bool forced);
 
 //
 // fetch the full path of the execname
 //
+__attribute__((visibility("default")))
 extern char* hpcrun_get_execname(void);
 
 typedef void siglongjmp_fcn(sigjmp_buf, int);
 
+__attribute__((visibility("default")))
 siglongjmp_fcn *hpcrun_get_real_siglongjmp(void);
 
 typedef struct hpcrun_aux_cleanup_t  hpcrun_aux_cleanup_t;
 
+__attribute__((visibility("default")))
 hpcrun_aux_cleanup_t * hpcrun_process_aux_cleanup_add( void (*func) (void *), void * arg);
+__attribute__((visibility("default")))
 void hpcrun_process_aux_cleanup_remove(hpcrun_aux_cleanup_t * node);
 
 // ** HACK to accomodate PAPI-C w cuda component & gpu blame shifting
 
 extern void special_cuda_ctxt_actions(bool enable);
 
+__attribute__((visibility("default")))
 extern void hpcrun_dlfunction_begin();
+__attribute__((visibility("default")))
 extern void hpcrun_dlfunction_end();
+__attribute__((visibility("default")))
 extern bool hpcrun_dlfunction_is_active();
+__attribute__((visibility("default")))
 extern bool hpcrun_suppress_sample();
 
 #endif  // ! main_h

@@ -772,6 +772,7 @@ METHOD_FN(display_events)
 // **************************************************************************
 // * public operations 
 // **************************************************************************
+__attribute__((visibility("default")))
 void
 hpcrun_disable_papi_cuda(void)
 {

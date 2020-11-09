@@ -51,6 +51,7 @@
 #include "hpctoolkit.h"
 
 // Internal functions
+__attribute__((visibility("default")))
 void hpcrun_start_stop_internal_init(void);
 
 #endif

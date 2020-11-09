@@ -73,10 +73,14 @@ typedef epoch_t* epoch_t_f(void);
 
 typedef void epoch_t_setter(epoch_t* s);
 
+__attribute__((visibility("default")))
 extern void hpcrun_reset_epoch(epoch_t* epoch);
 
+__attribute__((visibility("default")))
 epoch_t* hpcrun_check_for_new_loadmap(epoch_t *);
+__attribute__((visibility("default")))
 void hpcrun_epoch_init(cct_ctxt_t* ctxt);
+__attribute__((visibility("default")))
 void hpcrun_epoch_reset(void);
 
 #endif // EPOCH_H

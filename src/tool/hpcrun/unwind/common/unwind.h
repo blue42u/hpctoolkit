@@ -84,6 +84,7 @@
 // hpcrun_unw_init
 // ----------------------------------------------------------
 
+__attribute__((visibility("default")))
 void
 hpcrun_unw_init();
 
@@ -92,14 +93,17 @@ hpcrun_unw_init();
 // hpcrun_unw_get_ip_reg
 // ----------------------------------------------------------
 
+__attribute__((visibility("default")))
 int
 hpcrun_unw_get_ip_norm_reg(hpcrun_unw_cursor_t* c, 
 			   ip_normalized_t* reg_value);
 
+__attribute__((visibility("default")))
 int
 hpcrun_unw_get_ip_unnorm_reg(hpcrun_unw_cursor_t* c, void** reg_value);
 
 
+__attribute__((visibility("default")))
 void*
 hpcrun_unw_get_ra_loc(hpcrun_unw_cursor_t* c);
 
@@ -107,6 +111,7 @@ hpcrun_unw_get_ra_loc(hpcrun_unw_cursor_t* c);
 // hpcrun_unw_init_cursor
 // ----------------------------------------------------------
 
+__attribute__((visibility("default")))
 void
 hpcrun_unw_init_cursor(hpcrun_unw_cursor_t* cursor, void* context);
 
@@ -130,6 +135,7 @@ typedef enum {
 } step_state;
 
 
+__attribute__((visibility("default")))
 step_state
 hpcrun_unw_step(hpcrun_unw_cursor_t* c, int *steps_taken);
 

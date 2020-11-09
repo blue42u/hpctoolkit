@@ -72,8 +72,10 @@
 // interface operations
 //*****************************************************************************
 
+__attribute__((visibility("default")))
 bool hpcrun_get_disabled();
 
+__attribute__((visibility("default")))
 void hpcrun_set_disabled();
 
 

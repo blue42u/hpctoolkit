@@ -128,9 +128,11 @@ ip_normalized_gt(const ip_normalized_t* a, const ip_normalized_t* b)
 // belongs to. If no load module is found or the load module does not
 // have a valid 'dso_info' field, ip_normalized_NULL is returned; 
 // otherwise, the properly normalized ip is returned.
+__attribute__((visibility("default")))
 ip_normalized_t
 hpcrun_normalize_ip(void* unnormalized_ip, load_module_t* lm);
 
+__attribute__((visibility("default")))
 void *hpcrun_denormalize_ip(ip_normalized_t *normalized_ip);
 
 //***************************************************************************

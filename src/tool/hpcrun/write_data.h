@@ -50,7 +50,9 @@
 #include "epoch.h"
 #include "core_profile_trace_data.h"
 
+__attribute__((visibility("default")))
 extern int hpcrun_write_profile_data(core_profile_trace_data_t * cptd);
+__attribute__((visibility("default")))
 extern void hpcrun_flush_epochs(core_profile_trace_data_t * cptd);
 
 #endif // WRITE_DATA_H

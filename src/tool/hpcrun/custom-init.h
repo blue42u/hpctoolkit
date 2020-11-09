@@ -47,6 +47,7 @@
 #ifndef CUSTOM_INIT_H
 #define CUSTOM_INIT_H
 
+__attribute__((visibility("default")))
 void hpcrun_do_custom_init(void);
 
 #endif //CUSTOM_INIT_H

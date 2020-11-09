@@ -339,12 +339,14 @@ hpcrun_is_initialized()
   return hpcrun_is_initialized_private;
 }
 
+__attribute__((visibility("default")))
 void*
 hpcrun_get_addr_main(void)
 {
   return main_addr;
 }
 
+__attribute__((visibility("default")))
 bool
 hpcrun_inbounds_main(void* addr)
 {
@@ -451,6 +453,7 @@ dump_interval_handler(int sig, siginfo_t* info, void* ctxt)
 // process level 
 //------------------------------------
 
+__attribute__((visibility("default")))
 void
 hpcrun_init_internal(bool is_child)
 {
@@ -679,6 +682,7 @@ static void hpcrun_process_aux_cleanup_action()
  *   clean thread manager (write profile data and closing resources)
  *   terminate hpcfnbounds
  ***/ 
+__attribute__((visibility("default")))
 void
 hpcrun_fini_internal()
 {
@@ -738,6 +742,7 @@ hpcrun_fini_internal()
 extern __thread monitor_tid;
 #endif // USE_GCC_THREAD
 
+__attribute__((visibility("default")))
 void
 hpcrun_init_thread_support()
 {
@@ -759,6 +764,7 @@ logit(cct_node_t* n, cct_op_arg_t arg, size_t l)
        hpcrun_cct_addr(n)->ip_norm.lm_ip);
 }
 
+__attribute__((visibility("default")))
 void*
 hpcrun_thread_init(int id, local_thread_data_t* local_thread_data) // cct_ctxt_t* thr_ctxt)
 {
@@ -811,6 +817,7 @@ hpcrun_thread_init(int id, local_thread_data_t* local_thread_data) // cct_ctxt_t
  *   notify thread manager of the end of the thread (so that it can
  *      either clean-up the data, or reuse the data for another thread)
  **/ 
+__attribute__((visibility("default")))
 void
 hpcrun_thread_fini(epoch_t *epoch)
 {
@@ -849,6 +856,7 @@ hpcrun_thread_fini(epoch_t *epoch)
 
 volatile int HPCRUN_DEBUGGER_WAIT = 1;
 
+__attribute__((visibility("default")))
 void 
 hpcrun_continue()
 {
@@ -856,6 +864,7 @@ hpcrun_continue()
 }
 
 
+__attribute__((visibility("default")))
 void 
 hpcrun_wait()
 {
@@ -877,6 +886,7 @@ hpcrun_wait()
 // process control (via libmonitor)
 //***************************************************************************
 
+__attribute__((visibility("default")))
 void*
 monitor_init_process(int *argc, char **argv, void* data)
 {
@@ -974,6 +984,7 @@ monitor_init_process(int *argc, char **argv, void* data)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_fini_process(int how, void* data)
 {
@@ -991,6 +1002,7 @@ monitor_fini_process(int how, void* data)
 
 static fork_data_t from_fork;
 
+__attribute__((visibility("default")))
 void*
 monitor_pre_fork(void)
 {
@@ -1017,6 +1029,7 @@ monitor_pre_fork(void)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_post_fork(pid_t child, void* data)
 {
@@ -1049,6 +1062,7 @@ monitor_post_fork(pid_t child, void* data)
 // control variable MPI_RISKY to bypass this.  This is a problem on
 // IBM BlueGene and Cray XK6 (interlagos).
 //
+__attribute__((visibility("default")))
 void
 monitor_mpi_pre_init(void)
 {
@@ -1068,6 +1082,7 @@ monitor_mpi_pre_init(void)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_init_mpi(int *argc, char ***argv)
 {
@@ -1087,6 +1102,7 @@ monitor_init_mpi(int *argc, char ***argv)
 // thread control (via libmonitor)
 //***************************************************************************
 
+__attribute__((visibility("default")))
 void
 monitor_init_thread_support(void)
 {
@@ -1100,6 +1116,7 @@ monitor_init_thread_support(void)
   hpcrun_safe_exit();
 }
 
+__attribute__((visibility("default")))
 void*
 monitor_thread_pre_create(void)
 {
@@ -1160,6 +1177,7 @@ monitor_thread_pre_create(void)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_thread_post_create(void* data)
 {
@@ -1174,6 +1192,7 @@ monitor_thread_post_create(void* data)
   hpcrun_safe_exit();
 }
 
+__attribute__((visibility("default")))
 void* 
 monitor_init_thread(int tid, void* data)
 {
@@ -1212,6 +1231,7 @@ monitor_init_thread(int tid, void* data)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_fini_thread(void* init_thread_data)
 {
@@ -1229,6 +1249,7 @@ monitor_fini_thread(void* init_thread_data)
 }
 
 
+__attribute__((visibility("default")))
 size_t
 monitor_reset_stacksize(size_t old_size)
 {
@@ -1655,6 +1676,7 @@ MONITOR_EXT_WRAP_NAME(pthread_cond_broadcast)(pthread_cond_t* cond)
 
 #ifndef HPCRUN_STATIC_LINK
 
+__attribute__((visibility("default")))
 void
 monitor_pre_dlopen(const char* path, int flags)
 {
@@ -1669,6 +1691,7 @@ monitor_pre_dlopen(const char* path, int flags)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_dlopen(const char *path, int flags, void* handle)
 {
@@ -1679,6 +1702,7 @@ monitor_dlopen(const char *path, int flags, void* handle)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_dlclose(void* handle)
 {
@@ -1689,6 +1713,7 @@ monitor_dlclose(void* handle)
 }
 
 
+__attribute__((visibility("default")))
 void
 monitor_post_dlclose(void* handle, int ret)
 {

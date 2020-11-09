@@ -71,13 +71,16 @@ typedef  cct_node_t *(*hpcrun_kernel_callpath_t)(cct_node_t *path, void *data_au
 //              ^ path_end                        ^ path_beg
 //              ^ bt_beg                                       ^ bt_end
 //
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_insert_backtrace(cct_node_t* cct, frame_t* path_beg, frame_t* path_end);
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_insert_backtrace_w_metric(cct_node_t* cct,
 							int metric_id,
 							frame_t* path_beg, frame_t* path_end,
 							cct_metric_data_t datum, void *data);
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_record_backtrace(cct_bundle_t* bndl, bool partial, 
 backtrace_info_t *bt,
 #if 0
@@ -86,6 +89,7 @@ bool thread_stop,
 #endif
 					       bool tramp_found);
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_record_backtrace_w_metric(cct_bundle_t* bndl, bool partial, 
 backtrace_info_t *bt,
 #if 0
@@ -96,11 +100,13 @@ bool thread_stop,
 	                        int metricId, hpcrun_metricVal_t metricIncr,
 				void *data);
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_backtrace2cct(cct_bundle_t* cct, ucontext_t* context, 
 	int metricId, hpcrun_metricVal_t metricIncr,
 	int skipInner, int isSync, void *data);
 
 
+__attribute__((visibility("default")))
 extern void hpcrun_kernel_callpath_register(hpcrun_kernel_callpath_t kcp);
 
 //

@@ -58,6 +58,7 @@
 #include <errno.h>
 #include <unistd.h>
 
+__attribute__((visibility("default")))
 void *
 hpcrun_real_mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offset)
 {
@@ -65,6 +66,7 @@ hpcrun_real_mmap(void *addr, size_t len, int prot, int flags, int fd, off_t offs
     syscall((long) SYS_mmap, addr, len, prot, flags, fd, offset);
 }
 
+__attribute__((visibility("default")))
 int
 hpcrun_real_munmap(void *addr, size_t len)
 {

@@ -106,6 +106,7 @@ static SLIST_HEAD(segv_list_head, segv_list_s) list_cb_head =
 
 // FIXME: tallent: should this be together with hpcrun_drop_sample?
 
+__attribute__((visibility("default")))
 int
 hpcrun_sigsegv_handler(int sig, siginfo_t* siginfo, void* context)
 {

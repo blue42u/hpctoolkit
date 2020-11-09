@@ -70,6 +70,7 @@
  * local includes
  *****************************************************************************/
 
+#include "retcnt.h"
 #include "simple_oo.h"
 #include "sample_source_obj.h"
 #include "common.h"

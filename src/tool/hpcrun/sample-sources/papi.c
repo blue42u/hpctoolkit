@@ -611,6 +611,7 @@ METHOD_FN(display_events)
 //
 // Do not need to disable the papi cuda component if there is no papi component
 //
+__attribute__((visibility("default")))
 void
 hpcrun_disable_papi_cuda(void)
 {

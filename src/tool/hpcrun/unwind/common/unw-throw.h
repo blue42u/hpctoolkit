@@ -47,7 +47,9 @@
 #ifndef UNW_THROW_H
 #define UNW_THROW_H
 
+__attribute__((visibility("default")))
 extern void hpcrun_unw_throw(void);
+__attribute__((visibility("default")))
 extern void hpcrun_unw_drop(void);
 
 #endif // UNW_THROW_H

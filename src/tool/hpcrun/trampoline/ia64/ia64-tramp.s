@@ -3,7 +3,9 @@
 	.text
 	.align 16
 	.global hpcrun_trampoline#
+	;// .hidden hpcrun_trampoline#
 	.global hpcrun_trampoline_end#
+	;// .hidden hpcrun_trampoline_end#
 	.proc hpcrun_trampoline#
 hpcrun_trampoline:
 	.prologue 2, 2

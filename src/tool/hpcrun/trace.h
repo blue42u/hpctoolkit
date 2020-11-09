@@ -53,14 +53,21 @@
 #include <include/uint.h>
 void trace_other_close(void *thread_data);
 
+__attribute__((visibility("default")))
 void hpcrun_trace_init();
+__attribute__((visibility("default")))
 void hpcrun_trace_open(core_profile_trace_data_t * cptd);
+__attribute__((visibility("default")))
 void hpcrun_trace_append(core_profile_trace_data_t *cptd, cct_node_t* node, uint metric_id, uint32_t dLCA);
+__attribute__((visibility("default")))
 void hpcrun_trace_append_with_time(core_profile_trace_data_t *st, unsigned int call_path_id, uint metric_id, uint64_t nanotime);
+__attribute__((visibility("default")))
 void hpcrun_trace_close(core_profile_trace_data_t * cptd);
 
+__attribute__((visibility("default")))
 void hpcrun_trace_append_stream(core_profile_trace_data_t *cptd, cct_node_t *node, uint metric_id, uint32_t dLCA, uint64_t nanotime);
 
+__attribute__((visibility("default")))
 int hpcrun_trace_isactive();
 
 #endif // hpcrun_trace_h

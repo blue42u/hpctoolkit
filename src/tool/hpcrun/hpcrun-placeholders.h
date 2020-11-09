@@ -46,6 +46,7 @@ init_placeholder
 );
 
 
+__attribute__((visibility("default")))
 placeholder_t *
 hpcrun_placeholder_get
 (

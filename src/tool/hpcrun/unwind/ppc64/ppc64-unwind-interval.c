@@ -878,6 +878,7 @@ ppc64_dump_intervals(void* addr)
 }
 
 
+__attribute__((visibility("default")))
 void
 hpcrun_dump_intervals(void* addr)
 {

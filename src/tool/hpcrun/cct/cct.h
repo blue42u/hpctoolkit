@@ -126,35 +126,51 @@ typedef cct_node_t* cct_node_id_t;
 //
 // Constructors
 //
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_new(void);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_new_partial(void);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_new_special(void* addr);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_top_new(uint16_t lmid, uintptr_t lmip);
 // 
 // Accessor functions
 // 
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_parent(cct_node_t* node);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_children(cct_node_t* node);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_leftmost_child(cct_node_t* node);
+__attribute__((visibility("default")))
 extern int32_t hpcrun_cct_persistent_id(cct_node_t* node);
+__attribute__((visibility("default")))
 extern cct_addr_t* hpcrun_cct_addr(cct_node_t* node);
+__attribute__((visibility("default")))
 extern bool hpcrun_cct_is_leaf(cct_node_t* node);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_insert_path_return_leaf(cct_node_t *root, cct_node_t *path);
+__attribute__((visibility("default")))
 extern void hpcrun_cct_delete_self(cct_node_t *node);
 //
 // NOTE: having no children is not exactly the same as being a leaf
 //       A leaf represents a full path. There might be full paths
 //       that are a prefix of other full paths. So, a "leaf" can have children
 //
+__attribute__((visibility("default")))
 extern bool hpcrun_cct_no_children(cct_node_t* node);
+__attribute__((visibility("default")))
 extern bool hpcrun_cct_is_root(cct_node_t* node);
+__attribute__((visibility("default")))
 extern bool hpcrun_cct_is_dummy(cct_node_t* node);
 
 //
 // Mutator functions: modify a given cct
 //
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_insert_ip_norm(cct_node_t* node, ip_normalized_t ip_norm);
 
 //
@@ -164,17 +180,20 @@ extern cct_node_t* hpcrun_cct_insert_ip_norm(cct_node_t* node, ip_normalized_t i
 // the already present node is returned. Otherwise, a new node is created, linked in,
 // and returned]
 //
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_insert_addr(cct_node_t* cct, cct_addr_t* addr);
 
 //
 // Insert a dummy node to represent the callback function by hpcrun, which will
 // be eliminated before writing out the cct.
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_insert_dummy(cct_node_t* node, uint16_t lm_ip);
 
 //
 // 2nd fundamental mutator: mark a node as "terminal". That is,
 //   it is the last node of a path
 //
+__attribute__((visibility("default")))
 extern void hpcrun_cct_terminate_path(cct_node_t* node);
 //
 // Special purpose mutator:
@@ -185,15 +204,19 @@ extern void hpcrun_cct_terminate_path(cct_node_t* node);
 // child set. [Otherwise something recursive has to happen]
 //
 //
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_insert_node(cct_node_t* target, cct_node_t* src);
 
+__attribute__((visibility("default")))
 extern void hpcrun_cct_insert_path(cct_node_t ** root, cct_node_t* path);
 
 // mark a node for retention as the leaf of a traced call path.
+__attribute__((visibility("default")))
 extern void hpcrun_cct_retain(cct_node_t* x);
 
 // check if a node was marked for retention as the leaf of a traced
 // call path.
+__attribute__((visibility("default")))
 extern int hpcrun_cct_retained(cct_node_t* x);
 
 
@@ -216,6 +239,7 @@ typedef void (*cct_op_t)(cct_node_t* cct, cct_op_arg_t arg, size_t level);
 //
 // visting order: children first, then node
 //
+__attribute__((visibility("default")))
 extern void hpcrun_cct_walk_child_1st_w_level(cct_node_t* cct,
 					      cct_op_t op,
 					      cct_op_arg_t arg, size_t level);
@@ -223,6 +247,7 @@ extern void hpcrun_cct_walk_child_1st_w_level(cct_node_t* cct,
 //
 // visting order: node first, then children
 //
+__attribute__((visibility("default")))
 extern void hpcrun_cct_walk_node_1st_w_level(cct_node_t* cct,
 					     cct_op_t op,
 					     cct_op_arg_t arg, size_t level);
@@ -253,11 +278,13 @@ void hpcrun_cct_walk_node_1st(cct_node_t* cct,
 //  linked by the parent link. So walking a path involves touching the
 // path nodes in list reverse order
 //
+__attribute__((visibility("default")))
 extern void hpcrun_walk_path(cct_node_t* node, cct_op_t op, cct_op_arg_t arg);
 
 //
 // utility walker for cct sets (part of the substructure of a cct)
 //
+__attribute__((visibility("default")))
 extern void hpcrun_cct_walkset(cct_node_t* cct, cct_op_t fn, cct_op_arg_t arg);
 //
 // Writing operation
@@ -268,16 +295,19 @@ extern void hpcrun_cct_walkset(cct_node_t* cct, cct_op_t fn, cct_op_arg_t arg);
 // TODO: need to declare cct2metrics_t here to avoid to cyclic inclusion
 typedef struct cct2metrics_t cct2metrics_t;
 
+__attribute__((visibility("default")))
 int hpcrun_cct_fwrite(cct2metrics_t* cct2metrics_map,
                       cct_node_t* cct, FILE* fs, epoch_flags_t flags);
 //
 // Utilities
 //
+__attribute__((visibility("default")))
 extern size_t hpcrun_cct_num_nodes(cct_node_t* cct, bool count_dummy);
 //
 // look up addr in the set of cct's children
 // return the found node or NULL
 //
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_find_addr(cct_node_t* cct, cct_addr_t* addr);
 //
 // Merging operation: Given 2 ccts : CCT_A, CCT_B,
@@ -291,6 +321,7 @@ extern cct_node_t* hpcrun_cct_find_addr(cct_node_t* cct, cct_addr_t* addr);
 typedef void* merge_op_arg_t;
 typedef void (*merge_op_t)(cct_node_t* a, cct_node_t*b, merge_op_arg_t arg);
 
+__attribute__((visibility("default")))
 extern void hpcrun_cct_merge(cct_node_t* cct_a, cct_node_t* cct_b,
 			     merge_op_t merge, merge_op_arg_t arg);
 
@@ -300,7 +331,9 @@ extern void hpcrun_cct_merge(cct_node_t* cct_a, cct_node_t* cct_b,
 // FIXME: This should not be here vi3: allocation and free cct_node_t
 extern __thread cct_node_t* cct_node_freelist_head;
 
+__attribute__((visibility("default")))
 cct_node_t* hpcrun_cct_node_alloc();
+__attribute__((visibility("default")))
 void hpcrun_cct_node_free(cct_node_t *cct);
 // remove Children from cct
 void cct_remove_my_subtree(cct_node_t* cct);
@@ -310,12 +343,16 @@ void cct_remove_my_subtree(cct_node_t* cct);
 
 // for hpcrun_cct_walkset_merge
 typedef cct_node_t* (*cct_op_merge_t)(cct_node_t* cct, cct_op_arg_t arg, size_t level);
+__attribute__((visibility("default")))
 extern void hpcrun_cct_walkset_merge(cct_node_t* cct, cct_op_merge_t fn, cct_op_arg_t arg);
 
 
 // copy cct node
+__attribute__((visibility("default")))
 cct_node_t* hpcrun_cct_copy_just_addr(cct_node_t *cct);
+__attribute__((visibility("default")))
 void hpcrun_cct_set_children(cct_node_t* cct, cct_node_t* children);
+__attribute__((visibility("default")))
 void hpcrun_cct_set_parent(cct_node_t* cct, cct_node_t* parent);
 
 

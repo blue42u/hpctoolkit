@@ -118,6 +118,7 @@ init_region_id
 );
 
 
+__attribute__((visibility("default")))
 cct_node_t *
 hpcrun_region_lookup
 (

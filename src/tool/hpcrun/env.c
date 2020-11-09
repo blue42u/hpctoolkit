@@ -46,6 +46,7 @@
 
 #include <stdbool.h>
 #include <stdlib.h>
+#include "env.h"
 
 // Names for option environment variables
 const char* HPCRUN_OPT_LUSH_AGENTS = "HPCRUN_OPT_LUSH_AGENTS";

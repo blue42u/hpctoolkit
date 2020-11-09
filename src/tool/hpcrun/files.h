@@ -52,22 +52,33 @@
 // forward declarations
 //*****************************************************************************
 
+__attribute__((visibility("default")))
 void hpcrun_files_set_directory();
 
+__attribute__((visibility("default")))
 void hpcrun_files_set_executable(char *execname);   
 
+__attribute__((visibility("default")))
 const char *hpcrun_files_executable_pathname();
+__attribute__((visibility("default")))
 const char *hpcrun_files_executable_name();
+__attribute__((visibility("default")))
 const char *hpcrun_files_output_directory();
 
+__attribute__((visibility("default")))
 int hpcrun_open_log_file(void);
+__attribute__((visibility("default")))
 int hpcrun_open_trace_file(int thread);
+__attribute__((visibility("default")))
 int hpcrun_open_profile_file(int rank, int thread);
+__attribute__((visibility("default")))
 int hpcrun_rename_log_file(int rank);
+__attribute__((visibility("default")))
 int hpcrun_rename_trace_file(int rank, int thread);
 
 // storing the hash of the vdso for the current process
 extern char vdso_hash_str[];
+__attribute__((visibility("default")))
 void hpcrun_save_vdso();
 
 //*****************************************************************************

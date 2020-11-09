@@ -49,13 +49,16 @@
 // interface operations
 //***************************************************************************
 
+__attribute__((visibility("default")))
 void hpcrun_stats_reinit(void);
 
 //-----------------------------
 // samples total 
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_total_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_total(void);
 
 
@@ -63,7 +66,9 @@ long hpcrun_stats_num_samples_total(void);
 // samples attempted 
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_attempted_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_attempted(void);
 
 
@@ -71,7 +76,9 @@ long hpcrun_stats_num_samples_attempted(void);
 // samples blocked async 
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_blocked_async_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_blocked_async(void);
 
 
@@ -79,7 +86,9 @@ long hpcrun_stats_num_samples_blocked_async(void);
 // samples blocked dlopen 
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_blocked_dlopen_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_blocked_dlopen(void);
 
 
@@ -87,14 +96,18 @@ long hpcrun_stats_num_samples_blocked_dlopen(void);
 // samples dropped
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_dropped_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_dropped(void);
 
 
 //-----------------------------
 // acc samples recorded
 //-----------------------------
+__attribute__((visibility("default")))
 void hpcrun_stats_acc_samples_add(long value);
+__attribute__((visibility("default")))
 long hpcrun_stats_acc_samples(void);
 
 
@@ -102,14 +115,18 @@ long hpcrun_stats_acc_samples(void);
 // acc samples dropped
 //-----------------------------
 //
+__attribute__((visibility("default")))
 void hpcrun_stats_acc_samples_dropped_add(long value);
+__attribute__((visibility("default")))
 long hpcrun_stats_acc_samples_dropped(void);
 
 
 //-----------------------------
 // acc trace records 
 //-----------------------------
+__attribute__((visibility("default")))
 void hpcrun_stats_acc_trace_records_add(long value);
+__attribute__((visibility("default")))
 long hpcrun_stats_acc_trace_records(void);
 
 
@@ -117,7 +134,9 @@ long hpcrun_stats_acc_trace_records(void);
 // acc trace records dropped
 //-----------------------------
 //
+__attribute__((visibility("default")))
 void hpcrun_stats_acc_trace_records_dropped_add(long value);
+__attribute__((visibility("default")))
 long hpcrun_stats_acc_trace_records_dropped(void);
 
 
@@ -125,21 +144,27 @@ long hpcrun_stats_acc_trace_records_dropped(void);
 // partial unwind samples
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_partial_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_partial(void);
 
 //----------------------------
 // samples yielded due to deadlock prevention
 //----------------------------
 
+__attribute__((visibility("default")))
 extern void hpcrun_stats_num_samples_yielded_inc(void);
+__attribute__((visibility("default")))
 extern long hpcrun_stats_num_samples_yielded(void);
 
 //-----------------------------
 // samples filtered
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_filtered_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_filtered(void);
 
 
@@ -147,7 +172,9 @@ long hpcrun_stats_num_samples_filtered(void);
 // samples segv
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_samples_segv_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_samples_segv(void);
 
 
@@ -155,7 +182,9 @@ long hpcrun_stats_num_samples_segv(void);
 // unwind intervals total
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_unwind_intervals_total_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_unwind_intervals_total(void);
 
 
@@ -163,7 +192,9 @@ long hpcrun_stats_num_unwind_intervals_total(void);
 // unwind intervals suspicious
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_num_unwind_intervals_suspicious_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_num_unwind_intervals_suspicious(void);
 
 
@@ -171,32 +202,41 @@ long hpcrun_stats_num_unwind_intervals_suspicious(void);
 // samples that include 1 or more successful troll steps
 //------------------------------------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_trolled_inc(void);
+__attribute__((visibility("default")))
 long hpcrun_stats_trolled(void);
 
 //------------------------------------------------------
 // total number of (unwind) frames in sample set
 //------------------------------------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_frames_total_inc(long amt);
+__attribute__((visibility("default")))
 long hpcrun_stats_frames_total(void);
 
 //------------------------------------------------------
 // number of (unwind) frames in where libunwind failed
 //------------------------------------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_frames_libfail_total_inc(long amt);
+__attribute__((visibility("default")))
 long hpcrun_stats_frames_libfail_total(void);
 
 //---------------------------------------------------------------------
 // total number of (unwind) frames in sample set that employed trolling
 //---------------------------------------------------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_trolled_frames_inc(long amt);
+__attribute__((visibility("default")))
 long hpcrun_stats_trolled_frames(void);
 
 //-----------------------------
 // print summary
 //-----------------------------
 
+__attribute__((visibility("default")))
 void hpcrun_stats_print_summary(void);

@@ -73,8 +73,11 @@ typedef struct hpcrun_options_s {
 #define CSPROF_MEM_SZ_INIT       128 // small for mem stress test
 #define CSPROF_MEM_SZ_DEFAULT  CSPROF_MEM_SZ_INIT
 
+__attribute__((visibility("default")))
 int hpcrun_options__init(hpcrun_options_t* x);
+__attribute__((visibility("default")))
 int hpcrun_options__fini(hpcrun_options_t* x);
+__attribute__((visibility("default")))
 int hpcrun_options__getopts(hpcrun_options_t* x);
 
 #endif

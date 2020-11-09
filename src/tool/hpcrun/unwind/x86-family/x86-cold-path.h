@@ -51,7 +51,9 @@
 #include "x86-unwind-analysis.h"
 #include "x86-interval-arg.h"
 
+__attribute__((visibility("default")))
 extern bool hpcrun_is_cold_code(xed_decoded_inst_t *xptr, interval_arg_t *iarg);
+__attribute__((visibility("default")))
 extern void hpcrun_cold_code_fixup(unwind_interval *first, unwind_interval *current, unwind_interval *warm);
 
 #endif // X86_COLD_PATH_H

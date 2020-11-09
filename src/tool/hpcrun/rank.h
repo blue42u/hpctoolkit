@@ -47,6 +47,7 @@
 #ifndef _HPCRUN_RANK_H_
 #define _HPCRUN_RANK_H_
 
+__attribute__((visibility("default")))
 int hpcrun_get_rank(void);
 
 #endif

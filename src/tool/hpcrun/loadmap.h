@@ -95,11 +95,13 @@ typedef struct dso_info_t {
 // Constructs a new dso_info_t by either pulling an unused one from
 // the free list or malloc-ing one.  If there are any on the free
 // list, will return a pointer to it, otherwise will malloc a new one.
+__attribute__((visibility("default")))
 dso_info_t*
 hpcrun_dso_new();
 
 
 // Allocates and initializes a dso_info_t
+__attribute__((visibility("default")))
 dso_info_t*
 hpcrun_dso_make(const char* name, void** table,
 		struct fnbounds_file_header* fh,
@@ -111,11 +113,13 @@ hpcrun_dso_make(const char* name, void** table,
 // ---------------------------------------------------------
 
 // Use to dump the free list
+__attribute__((visibility("default")))
 void
 hpcrun_dsoList_dump(dso_info_t* dl_list);
 
 
 // Use to dump a single dso_info_t struct.
+__attribute__((visibility("default")))
 void
 hpcrun_dso_dump(dso_info_t* x);
 
@@ -136,10 +140,12 @@ typedef struct load_module_t
 } load_module_t;
 
 
+__attribute__((visibility("default")))
 load_module_t*
 hpcrun_loadModule_new(const char* name);
 
 // used only to add a load module for the kernel 
+__attribute__((visibility("default")))
 uint16_t 
 hpcrun_loadModule_add(const char* name);
 
@@ -159,14 +165,17 @@ typedef struct hpcrun_loadmap_t
 // ---------------------------------------------------------
 // 
 // ---------------------------------------------------------
+__attribute__((visibility("default")))
 void 
 hpcrun_loadmap_lock();
 
 
+__attribute__((visibility("default")))
 void
 hpcrun_loadmap_unlock();
 
 
+__attribute__((visibility("default")))
 int
 hpcrun_loadmap_isLocked();
 
@@ -176,16 +185,19 @@ hpcrun_loadmap_isLocked();
 // ---------------------------------------------------------
 
 // Requests a new load map.
+__attribute__((visibility("default")))
 hpcrun_loadmap_t*
 hpcrun_loadmap_new();
 
 
 // Initializes the load map
+__attribute__((visibility("default")))
 extern void hpcrun_loadmap_init(hpcrun_loadmap_t* x);
 
 //
 // debugging operation, print loadmap in reverse order
 //
+__attribute__((visibility("default")))
 extern void hpcrun_loadmap_print(hpcrun_loadmap_t* loadmap);
 
 // ---------------------------------------------------------
@@ -194,21 +206,25 @@ extern void hpcrun_loadmap_print(hpcrun_loadmap_t* loadmap);
 
 // hpcrun_loadmap_findByAddr: Find the (currently mapped) load module
 //   that 'contains' the address range [begin, end]
+__attribute__((visibility("default")))
 load_module_t*
 hpcrun_loadmap_findByAddr(void* begin, void* end);
 
 
 // hpcrun_loadmap_findByName: Find a load module by name.
+__attribute__((visibility("default")))
 load_module_t*
 hpcrun_loadmap_findByName(const char* name);
 
 // find a load module, given the (previously determined) id
+__attribute__((visibility("default")))
 load_module_t*
 hpcrun_loadmap_findById(uint16_t id);
 
 
 // hpcrun_loadmap_findLoadName: Search loadmap for (full) name of
 //   entry that has "name" as its executable name
+__attribute__((visibility("default")))
 const char*
 hpcrun_loadmap_findLoadName(const char* name);
 
@@ -221,12 +237,14 @@ hpcrun_loadmap_findLoadName(const char* name);
 //   load map, ensuring that dso's name appears exactly once in the
 //   load map. 'dso' is assumed to be non-NULL.  Locates the new load
 //   module at the front of the load map.
+__attribute__((visibility("default")))
 load_module_t*
 hpcrun_loadmap_map(dso_info_t* dso);
 
 
 // hpcrun_loadmap_unmap: Note that 'lm' has been unmapped but retain a
 //   reference to it within the load map.
+__attribute__((visibility("default")))
 void
 hpcrun_loadmap_unmap(load_module_t* lm);
 
@@ -235,9 +253,11 @@ hpcrun_loadmap_unmap(load_module_t* lm);
 //
 //***************************************************************************
 
+__attribute__((visibility("default")))
 void
 hpcrun_initLoadmap();
 
+__attribute__((visibility("default")))
 hpcrun_loadmap_t*
 hpcrun_getLoadmap();
 
@@ -249,8 +269,10 @@ typedef struct loadmap_notify_t {
   struct loadmap_notify_t *next;
 } loadmap_notify_t;
 
+__attribute__((visibility("default")))
 void hpcrun_loadmap_notify_register(loadmap_notify_t *n);
 
+__attribute__((visibility("default")))
 int
 hpcrun_loadmap_iterate
 (

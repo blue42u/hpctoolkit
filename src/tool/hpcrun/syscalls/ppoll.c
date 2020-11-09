@@ -161,6 +161,7 @@ tspec_sub(struct timespec *ans, const struct timespec *a, const struct timespec 
 // interface operations
 //******************************************************************************
 
+__attribute__((visibility("default")))
 int
 MONITOR_EXT_WRAP_NAME(ppoll)
   (struct pollfd *fds, nfds_t nfds,
@@ -220,6 +221,7 @@ MONITOR_EXT_WRAP_NAME(ppoll)
 
 //----------------------------------------------------------------------
 
+__attribute__((visibility("default")))
 int
 MONITOR_EXT_WRAP_NAME(pselect)
   (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds,

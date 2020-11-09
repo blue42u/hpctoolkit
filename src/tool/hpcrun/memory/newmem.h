@@ -63,6 +63,7 @@ struct hpcrun_meminfo {
 
 typedef struct hpcrun_meminfo hpcrun_meminfo_t;
 
+__attribute__((visibility("default")))
 void hpcrun_make_memstore(hpcrun_meminfo_t *mi, int is_child);
 
 #endif

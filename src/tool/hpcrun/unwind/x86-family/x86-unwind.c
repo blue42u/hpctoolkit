@@ -369,12 +369,14 @@ hpcrun_unw_step_real(hpcrun_unw_cursor_t* cursor)
   return STEP_TROLL;
 }
 
+__attribute__((visibility("default")))
 size_t hpcrun_validation_counts[] = {
 #define _MM(a) [UNW_ADDR_ ## a] = 0,
 VSTAT_ENUMS
 #undef _MM
 };
 
+__attribute__((visibility("default")))
 void
 hpcrun_validation_summary(void)
 {

@@ -72,6 +72,7 @@
  * local includes
  *****************************************************************************/
 
+#include "none.h"
 #include <hpcrun/hpcrun_options.h>
 #include <hpcrun/disabled.h>
 #include <hpcrun/metrics.h>

@@ -65,6 +65,7 @@
 #include <link.h>
 #include "loadmap.h"
 
+__attribute__((visibility("default")))
 int
 hpcrun_real_dl_iterate_phdr (
   int (*callback) (struct dl_phdr_info * info, size_t size, void * data),

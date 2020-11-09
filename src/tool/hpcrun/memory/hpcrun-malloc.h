@@ -84,12 +84,18 @@ extern "C" {
 // 
 // NOTE: This memory cannot be freed! 
 //---------------------------------------------------------------------------
+__attribute__((visibility("default")))
 void* hpcrun_malloc(size_t size);
+__attribute__((visibility("default")))
 void* hpcrun_malloc_freeable(size_t size);
+__attribute__((visibility("default")))
 void* hpcrun_malloc_safe(size_t size);
 
+__attribute__((visibility("default")))
 void hpcrun_memory_reinit(void);
+__attribute__((visibility("default")))
 void hpcrun_reclaim_freeable_mem(void);
+__attribute__((visibility("default")))
 void hpcrun_memory_summary(void);
 
 #if defined(__cplusplus)

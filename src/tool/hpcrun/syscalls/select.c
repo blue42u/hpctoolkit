@@ -126,6 +126,7 @@ find_select(void)
 // interface operations
 //******************************************************************************
 
+__attribute__((visibility("default")))
 int 
 MONITOR_EXT_WRAP_NAME(select)
 (

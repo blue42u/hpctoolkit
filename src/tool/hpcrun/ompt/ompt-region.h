@@ -76,6 +76,7 @@ ompt_parallel_region_register_callbacks
 
 
 // free adds entity to freelist
+__attribute__((visibility("default")))
 void 
 hpcrun_ompt_region_free
 (

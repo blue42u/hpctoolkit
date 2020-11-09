@@ -59,6 +59,7 @@
 // interface operations
 //*****************************************************************************
 
+__attribute__((visibility("default")))
 uint64_t
 hpcrun_nanotime
 (

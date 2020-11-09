@@ -79,6 +79,7 @@
 #include <hpcrun/sample_sources_registered.h>
 #include "simple_oo.h"
 #include <hpcrun/thread_data.h>
+#include "memleak.h"
 
 #include <messages/messages.h>
 #include <utilities/tokenize.h>

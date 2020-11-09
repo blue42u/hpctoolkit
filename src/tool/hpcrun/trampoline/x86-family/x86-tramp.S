@@ -26,6 +26,7 @@
 
 	.text
 	.global hpcrun_trampoline
+	;// .hidden hpcrun_trampoline
 	.type hpcrun_trampoline,@function	
 hpcrun_trampoline:
 	push	%x86_Reg_BP /* need to save a slot for the "real" return address */
@@ -99,6 +100,7 @@ hpcrun_trampoline:
 	/* never actually gets called; used to determine if the current
 	   pc is in trampoline code of some kind */
 	.global hpcrun_trampoline_end
+	;// .hidden hpcrun_trampoline_end
         .type hpcrun_trampoline_end,@function
 hpcrun_trampoline_end:
 	ret

@@ -47,6 +47,7 @@
 #ifndef TERM_HANDLER_H
 #define TERM_HANDLER_H
 
+__attribute__((visibility("default")))
 int
 hpcrun_setup_term();
 

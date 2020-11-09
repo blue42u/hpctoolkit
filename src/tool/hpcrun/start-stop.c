@@ -132,8 +132,12 @@ hpctoolkit_sampling_stop(void)
 // hpctoolkit_sampling_start() and _stop() are void->void, so they're
 // a special case.
 
+__attribute__((visibility("default")))
 void hpctoolkit_sampling_start_ (void) __attribute__ ((alias ("hpctoolkit_sampling_start")));
+__attribute__((visibility("default")))
 void hpctoolkit_sampling_start__(void) __attribute__ ((alias ("hpctoolkit_sampling_start")));
 
+__attribute__((visibility("default")))
 void hpctoolkit_sampling_stop_ (void) __attribute__ ((alias ("hpctoolkit_sampling_stop")));
+__attribute__((visibility("default")))
 void hpctoolkit_sampling_stop__(void) __attribute__ ((alias ("hpctoolkit_sampling_stop")));

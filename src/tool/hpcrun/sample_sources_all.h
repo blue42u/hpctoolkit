@@ -55,20 +55,35 @@
 
 #include <sample-sources/sample_source_obj.h>
 
+__attribute__((visibility("default")))
 extern void hpcrun_sample_sources_from_eventlist(char *evl);
+__attribute__((visibility("default")))
 extern sample_source_t* hpcrun_fetch_source_by_name(const char *src);
+__attribute__((visibility("default")))
 extern bool hpcrun_check_named_source(const char *src);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_init(void);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_thread_init(void);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_thread_init_action(void);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_process_event_list(int lush_metrics);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_finalize_event_list(void);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_gen_event_set(int lush_metrics);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_start(void);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_thread_fini_action(void);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_stop(void);
+__attribute__((visibility("default")))
 extern void hpcrun_all_sources_shutdown(void);
+__attribute__((visibility("default")))
 extern bool  hpcrun_all_sources_started(void);
+__attribute__((visibility("default")))
 extern size_t hpcrun_get_num_sample_sources(void);
 
 #define SAMPLE_SOURCES(op,...) hpcrun_all_sources_ ##op(__VA_ARGS__)

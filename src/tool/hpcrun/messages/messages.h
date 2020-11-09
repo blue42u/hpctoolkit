@@ -103,30 +103,47 @@
 
 
 
+__attribute__((visibility("default")))
 void messages_init();
+__attribute__((visibility("default")))
 void messages_fini(void);
 
+__attribute__((visibility("default")))
 void messages_logfile_create();
+__attribute__((visibility("default")))
 int  messages_logfile_fd(void);
 
+__attribute__((visibility("default")))
 void messages_donothing(void);
 
+__attribute__((visibility("default")))
 void hpcrun_amsg(const char *fmt,...);
+__attribute__((visibility("default")))
 void hpcrun_emsg(const char *fmt,...);
+__attribute__((visibility("default")))
 void hpcrun_emsg_valist(const char *fmt, va_list_box* box);
+__attribute__((visibility("default")))
 void hpcrun_nmsg(pmsg_category flag, const char* tag, const char *fmt,...);
+__attribute__((visibility("default")))
 extern void hpcrun_pmsg(const char* tag, const char *fmt,...);
 
+__attribute__((visibility("default")))
 void hpcrun_pmsg_stderr(bool echo_stderr,pmsg_category flag, const char* tag, 
 			const char *fmt,...);
+__attribute__((visibility("default")))
 void hpcrun_nmsg_stderr(bool echo_stderr,pmsg_category flag, const char* tag, 
 			const char *fmt,...);
+__attribute__((visibility("default")))
 void hpcrun_stderr_log_msg(bool copy_to_log, const char *fmt,...);
+__attribute__((visibility("default")))
 void hpcrun_exit_on_error(int ret, int ret_expected, const char *fmt,...);
 
+__attribute__((visibility("default")))
 void hpcrun_abort_w_info(void (*info)(void),const char *fmt,...);
 
+__attribute__((visibility("default")))
 int hpcrun_below_pmsg_threshold(void);
+__attribute__((visibility("default")))
 void hpcrun_up_pmsg_count(void);
 
 void unlimit_msgs(void);

@@ -103,11 +103,15 @@ typedef pmsg_category dbg_category;
 // forward declarations
 //*****************************************************************************
 
+__attribute__((visibility("default")))
 void debug_flag_init();
 
+__attribute__((visibility("default")))
 int  debug_flag_get(dbg_category flag);
+__attribute__((visibility("default")))
 void debug_flag_set(dbg_category flag, int v);
 
+__attribute__((visibility("default")))
 void debug_flag_dump();
 
 #endif // debug_flag_h

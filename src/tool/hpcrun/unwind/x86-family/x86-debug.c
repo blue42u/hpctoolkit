@@ -83,12 +83,14 @@ x86_dump_intervals(void *addr, int noisy)
   x86_print_intervals(intervals);
 }
 
+__attribute__((visibility("default")))
 void
 hpcrun_dump_intervals(void* addr)
 {
   x86_dump_intervals(addr, 0);
 }
 
+__attribute__((visibility("default")))
 void
 hpcrun_dump_intervals_noisy(void* addr)
 {

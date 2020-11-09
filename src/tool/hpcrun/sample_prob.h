@@ -47,8 +47,11 @@
 #ifndef _HPCRUN_SAMPLE_PROB_
 #define _HPCRUN_SAMPLE_PROB_
 
+__attribute__((visibility("default")))
 void hpcrun_sample_prob_init(void);
+__attribute__((visibility("default")))
 int  hpcrun_sample_prob_active(void);
+__attribute__((visibility("default")))
 void hpcrun_sample_prob_mesg(void);
 
 #endif // _HPCRUN_SAMPLE_PROB_

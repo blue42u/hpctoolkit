@@ -49,9 +49,13 @@
 
 #include "thread_data.h"
 
+__attribute__((visibility("default")))
 extern void hpcrun_init_handling_sample(thread_data_t *td, int in, int id);
+__attribute__((visibility("default")))
 extern void hpcrun_set_handling_sample(thread_data_t *td);
+__attribute__((visibility("default")))
 extern void hpcrun_clear_handling_sample(thread_data_t *td);
+__attribute__((visibility("default")))
 extern int  hpcrun_is_handling_sample(void);
 
 

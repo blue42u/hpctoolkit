@@ -143,6 +143,7 @@ help_hpcrun_backtrace2cct(cct_bundle_t* cct, ucontext_t* context,
 
 //
 // 
+__attribute__((visibility("default")))
 void
 hpcrun_set_retain_recursion_mode(bool mode)
 {
@@ -150,6 +151,7 @@ hpcrun_set_retain_recursion_mode(bool mode)
   retain_recursion = mode;
 }
 
+__attribute__((visibility("default")))
 bool
 hpcrun_get_retain_recursion_mode()
 {
@@ -218,6 +220,7 @@ hpcrun_cct_insert_backtrace_w_metric(cct_node_t* treenode,
 // Insert new backtrace in cct
 //
 
+__attribute__((visibility("default")))
 cct_node_t*
 hpcrun_cct_insert_bt(cct_node_t* node,
 		     int metricId,

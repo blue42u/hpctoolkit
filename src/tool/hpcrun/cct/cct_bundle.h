@@ -88,18 +88,23 @@ typedef struct cct_bundle_t {
 // Interface procedures
 //
 
+__attribute__((visibility("default")))
 extern void hpcrun_cct_bundle_init(cct_bundle_t* bundle, cct_ctxt_t* ctxt);
 //
 // IO for cct bundle
 //
+__attribute__((visibility("default")))
 extern int hpcrun_cct_bundle_fwrite(FILE* fs, epoch_flags_t flags, cct_bundle_t* x,
                                     cct2metrics_t* cct2metrics_map);
 
 //
 // utility functions
 //
+__attribute__((visibility("default")))
 extern bool hpcrun_empty_cct(cct_bundle_t* cct);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_bundle_get_idle_node(cct_bundle_t* cct);
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_cct_bundle_get_no_activity_node(cct_bundle_t* cct);
 
 #endif // CCT_BUNDLE_H

@@ -2,8 +2,10 @@
         .section        ".text"
         .align 2
         .globl hpcrun_trampoline
+        ;// .hidden hpcrun_trampoline
         .type   hpcrun_trampoline, @function
         .globl hpcrun_trampoline_end
+        ;// .hidden hpcrun_trampoline_end
 hpcrun_trampoline:
 .L2:
 hpcrun_trampoline_end:

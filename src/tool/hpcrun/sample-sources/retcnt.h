@@ -66,6 +66,7 @@
  * interface operations
  *****************************************************************************/
 
+__attribute__((visibility("default")))
 void hpcrun_retcnt_inc(cct_node_t* node, int incr);
 
 #endif // sample_source_retcnt_h

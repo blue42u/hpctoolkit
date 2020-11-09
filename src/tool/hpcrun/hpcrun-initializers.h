@@ -18,7 +18,9 @@
 // interface functions
 //******************************************************************************
 
+__attribute__((visibility("default")))
 void hpcrun_initializers_defer(closure_t *c);
 
+__attribute__((visibility("default")))
 void hpcrun_initializers_apply();
 #endif

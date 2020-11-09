@@ -25,6 +25,7 @@ typedef struct cct2metrics_t cct2metrics_t;
 // implicitly.
 // [Singleton pattern for GangOf4 enthusiasts]
 
+__attribute__((visibility("default")))
 extern void hpcrun_cct2metrics_init(cct2metrics_t** map);
 
 // ******** Interface operations **********
@@ -37,21 +38,26 @@ extern void hpcrun_cct2metrics_init(cct2metrics_t** map);
 // if there are no metrics for the node, then
 // create a metric set, and return it.
 //
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_reify_metric_set(cct_node_id_t cct_id, int metric_id);
 
 //
 // get metric data list for a node (NULL value is ok).
 //
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_get_metric_data_list_specific(cct2metrics_t **map, cct_node_id_t cct_id);
 
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_get_metric_data_list(cct_node_id_t cct_id);
 
 //
 // move metric data list from one node to another
 //
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_move_metric_data_list_specific(cct2metrics_t **map,
   cct_node_id_t dest_id, cct_node_id_t source_id);
 
+__attribute__((visibility("default")))
 extern metric_data_list_t* hpcrun_move_metric_data_list(cct_node_id_t dest_id, cct_node_id_t source_id);
 
 

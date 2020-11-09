@@ -66,7 +66,9 @@
  * interface functions
  *****************************************************************************/
 
+__attribute__((visibility("default")))
 extern void hpcrun_set_executable_name(char *argv0);
+__attribute__((visibility("default")))
 extern const char *hpcrun_get_executable_name();
 
 #endif

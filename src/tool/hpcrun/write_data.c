@@ -352,6 +352,7 @@ hpcrun_write_profile_data(core_profile_trace_data_t * cptd)
 //
 // DEBUG: fetch and print current loadmap
 //
+__attribute__((visibility("default")))
 void
 hpcrun_dbg_print_current_loadmap(void)
 {

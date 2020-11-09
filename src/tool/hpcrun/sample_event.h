@@ -87,6 +87,7 @@ hpcrun_enable_sampling(void)
   private_hpcrun_sampling_disabled = false;
 }
 
+__attribute__((visibility("default")))
 extern void hpcrun_drop_sample(void);
 
 
@@ -105,12 +106,15 @@ hpcrun_sample_val_init(sample_val_t* x)
 }
 
 
+__attribute__((visibility("default")))
 extern sample_val_t hpcrun_sample_callpath(void *context, int metricId, 
 		                   hpcrun_metricVal_t metricIncr,
 				   int skipInner, int isSync, sampling_info_t *data);
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_gen_thread_ctxt(void *context);
 
+__attribute__((visibility("default")))
 extern cct_node_t* hpcrun_sample_callpath_w_bt(void *context,
 					       int metricId, uint64_t metricIncr, 
 					       bt_mut_fn bt_fn, bt_fn_arg arg,

@@ -115,6 +115,7 @@ sample_source_t obj_name() = {
  * constructor 
  *****************************************************************************/
 
+__attribute__((visibility("default")))
 void
 SS_OBJ_CONSTRUCTOR(ss_name)(void)
 {

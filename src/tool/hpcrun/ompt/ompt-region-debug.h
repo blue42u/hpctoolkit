@@ -115,6 +115,7 @@ ompt_region_debug_region_create
 );
 
 
+__attribute__((visibility("default")))
 int 
 hpcrun_ompt_region_check
 (
