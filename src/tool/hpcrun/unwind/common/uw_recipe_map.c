@@ -650,8 +650,12 @@ uw_recipe_map_init(void)
   uw_recipe_map_notify_init();
 
   // initialize the map with a POISONED node ({([0, UINTPTR_MAX), NULL), NEVER}, NULL)
-  for (uw = 0; uw < NUM_UNWINDERS; uw++)
-    uw_recipe_map_poison(0, UINTPTR_MAX, uw);
+  static bool first = true;
+  if(first) {
+    first = false;
+    for (uw = 0; uw < NUM_UNWINDERS; uw++)
+      uw_recipe_map_poison(0, UINTPTR_MAX, uw);
+  }
 }
 
 
