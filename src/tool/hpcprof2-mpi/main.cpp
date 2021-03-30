@@ -50,6 +50,7 @@
 
 #include <mpi.h>
 #include <iostream>
+#include <time.h>
 
 std::mutex mpitex;
 
@@ -63,6 +64,8 @@ int rankN(ProfArgs&&);
 int main(int argc, char* const argv[]) {
   // Fire up MPI. We just use the WORLD communicator for everything.
   mpi::World::initialize();
+   struct timespec starttime;
+   clock_gettime(CLOCK_MONOTONIC, &starttime);
 
   // Read in the arguments.
   ProfArgs args(argc, argv);
@@ -79,5 +82,11 @@ int main(int argc, char* const argv[]) {
 
   // Clean up and close up.
   mpi::World::finalize();
+   struct timespec endtime;
+   clock_gettime(CLOCK_MONOTONIC, &endtime);
+   double difftime = endtime.tv_sec - starttime.tv_sec;
+   difftime += endtime.tv_nsec >= starttime.tv_nsec ? (double)(endtime.tv_nsec - starttime.tv_nsec)/1000000000.0
+                                                    : -(double)(starttime.tv_nsec - endtime.tv_nsec)/1000000000.0;
+   if(mpi::World::rank() == 0) fprintf(stderr, "Inner time: %f\n", difftime);
   return ret;
 }
