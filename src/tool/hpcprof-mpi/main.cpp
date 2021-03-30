@@ -247,6 +247,8 @@ realmain(int argc, char* const* argv)
   // 0. MPI initialize
   // -------------------------------------------------------
   MPI_Init(&argc, (char***)&argv);
+   struct timespec starttime;
+   clock_gettime(CLOCK_MONOTONIC, &starttime);
 
   int myRank, numRanks;
   MPI_Comm_rank(MPI_COMM_WORLD, &myRank); 
@@ -439,6 +441,12 @@ realmain(int argc, char* const* argv)
   delete profGbl;
 
   MPI_Finalize();
+   struct timespec endtime;
+   clock_gettime(CLOCK_MONOTONIC, &endtime);
+   double difftime = endtime.tv_sec - starttime.tv_sec;
+   difftime += endtime.tv_nsec >= starttime.tv_nsec ? (double)(endtime.tv_nsec - starttime.tv_nsec)/1000000000.0
+                                                    : -(double)(starttime.tv_nsec - endtime.tv_nsec)/1000000000.0;
+   if(myRank == 0) fprintf(stderr, "Inner time: %f\n", difftime);
 
   return 0;
 }
