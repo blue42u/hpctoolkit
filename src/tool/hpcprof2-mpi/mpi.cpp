@@ -54,6 +54,7 @@
 #include <cstring>
 #include <mutex>
 #include <thread>
+#include <iostream>
 
 using namespace hpctoolkit::mpi;
 using namespace detail;
@@ -133,6 +134,7 @@ void World::initialize() noexcept {
   int rank;
   MPI_Comm_rank(MPI_COMM_WORLD, &rank);
   m_rank = rank;
+  if(rank == 0) std::cerr << "Send/Recv mode!\n";
 
   int size;
   MPI_Comm_size(MPI_COMM_WORLD, &size);
